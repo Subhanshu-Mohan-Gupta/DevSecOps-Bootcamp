@@ -100,8 +100,7 @@ jobs:
 
 ---
 ## 🤝 Support
-* **Slack channel** `#devsecops‑bootcamp` – post questions & screenshots.
-* **Office hours** – Tuesdays & Thursdays, 2‑3 PM CT.
+* **Teams channel** `#4302-Arena` – post questions & screenshots.
 * **Docs & examples** – see `/shared/templates/` for starter code and CI templates.
 
 Happy hardening & shipping secure software! 💪
