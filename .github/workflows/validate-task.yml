@@ -7,7 +7,6 @@ on:
       - 'T*/**'
 
 jobs:
-  # 1) Detect which task folders were modified in the PR
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -26,7 +25,6 @@ jobs:
           echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
           echo "Changed task folders: $CHANGED"
 
-  # 2) Run each task’s own CI in parallel
   task-ci:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.folders != '[]' }}
@@ -37,7 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Each task already ships a task-specific workflow or script.
       - name: Trigger task-specific CI
         run: |
           cd "${{ matrix.folder }}"
