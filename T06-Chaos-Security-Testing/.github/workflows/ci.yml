@@ -1,0 +1,21 @@
+name: Chaos Security Testing CI
+
+on:
+  push:
+    paths:
+      - 'T06-Chaos-Security-Testing/**'
+  pull_request:
+    paths:
+      - 'T06-Chaos-Security-Testing/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Task
+        run: |
+          echo "Running task: Chaos Security Testing"
+          # Add tool installation or script execution here

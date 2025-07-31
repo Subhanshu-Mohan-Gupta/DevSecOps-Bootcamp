@@ -1,0 +1,21 @@
+name: Compliance Audit CICD CI
+
+on:
+  push:
+    paths:
+      - 'T04-Compliance-Audit-CICD/**'
+  pull_request:
+    paths:
+      - 'T04-Compliance-Audit-CICD/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Task
+        run: |
+          echo "Running task: Compliance Audit CICD"
+          # Add tool installation or script execution here
