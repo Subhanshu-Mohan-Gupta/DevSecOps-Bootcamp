@@ -1,4 +1,4 @@
-# Task 1: Enforce Security Policies in Infrastructure-as-Code (IaC)
+# Enforce Security Policies in Infrastructure-as-Code (IaC)
 
 ## Objective
 Validate Terraform code against security policies (e.g., no public S3, encryption enabled) using policy-as-code tools like OPA or Sentinel.

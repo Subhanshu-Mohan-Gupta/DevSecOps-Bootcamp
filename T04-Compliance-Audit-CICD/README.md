@@ -1,4 +1,4 @@
-# Task 4: Automated Compliance Auditing in CI/CD
+# Automated Compliance Auditing in CI/CD
 
 ## Objective
 Add a CI pipeline stage that performs static code analysis, dependency scan, and image hardening check.

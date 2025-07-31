@@ -1,4 +1,4 @@
-# Task 2: Runtime Threat Detection in Kubernetes
+# Runtime Threat Detection in Kubernetes
 
 ## Objective
 Deploy Falco or Tracee to detect anomalous system calls and runtime behaviors within Kubernetes.
