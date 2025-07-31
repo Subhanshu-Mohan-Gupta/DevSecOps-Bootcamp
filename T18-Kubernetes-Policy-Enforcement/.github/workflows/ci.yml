@@ -1,0 +1,21 @@
+name: Kubernetes Policy‑as‑Code CI
+
+on:
+  push:
+    paths:
+      - 'T18-Kubernetes-Policy-Enforcement/**'
+  pull_request:
+    paths:
+      - 'T18-Kubernetes-Policy-Enforcement/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Task
+        run: |
+          echo "Running task: Kubernetes Policy‑as‑Code"
+          # Add tool installation or script execution here

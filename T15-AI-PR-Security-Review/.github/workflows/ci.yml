@@ -1,0 +1,21 @@
+name: AI‑Powered Pull‑Request Security Review CI
+
+on:
+  push:
+    paths:
+      - 'T15-AI-PR-Security-Review/**'
+  pull_request:
+    paths:
+      - 'T15-AI-PR-Security-Review/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Task
+        run: |
+          echo "Running task: AI‑Powered Pull‑Request Security Review"
+          # Add tool installation or script execution here
