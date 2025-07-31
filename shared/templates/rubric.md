@@ -52,8 +52,8 @@ A standardized guide for mentors evaluating trainee submissions in the **DevSecO
 
 | Metric | Value |
 |--------|-------|
-| **Total Score (General + Task-Specific)** | **__/40** (adjust max if fewer tasks) |
-| **Mentor Name** | |
+| **Total Score (General + Task-Specific)** | **___ /40** (adjust max if fewer tasks) |
+| **Mentor Name** | Subhanshu Mohan Gupta |
 | **Trainee Name** | |
 | **Date** | |
 
