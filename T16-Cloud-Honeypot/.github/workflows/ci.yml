@@ -1,0 +1,21 @@
+name: Cloud‑Native Honeypot for Threat Intel CI
+
+on:
+  push:
+    paths:
+      - 'T16-Cloud-Honeypot/**'
+  pull_request:
+    paths:
+      - 'T16-Cloud-Honeypot/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Task
+        run: |
+          echo "Running task: Cloud‑Native Honeypot for Threat Intel"
+          # Add tool installation or script execution here
