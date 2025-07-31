@@ -42,7 +42,7 @@ Welcome to the **DevSecOps Bootcamp** &mdash; a hands‑on training ground where
    ```
 5. Navigate to the task folder (`cd T13-Secure-Supply-Chain`) and open its `README.md`.  Follow the instructions **exactly**.
 6. Run `python ../auto-progress-checker.py` from repo root at any time to see what you might be missing.
-7. **Commit often**, push your branch, and open a **Pull Request (PR)** back to **`main`**.
+7. **Commit often**, push your branch, and open a **Pull Request (PR)** back to **`final-submission-4302`**.
 8. CI/CD will run **only the checks for the tasks you touched**. All _required_ checks must be green before the PR can be merged.
 9. Once passed, request review from me. I will grade you with the rubric and merge.
 10. Move on to your next task ▶️.
