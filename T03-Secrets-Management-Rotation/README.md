@@ -1,4 +1,4 @@
-# Task 3: End-to-End Secrets Management & Rotation
+# End-to-End Secrets Management & Rotation
 
 ## Objective
 Implement automated secrets storage and rotation using Vault, and inject secrets at runtime.

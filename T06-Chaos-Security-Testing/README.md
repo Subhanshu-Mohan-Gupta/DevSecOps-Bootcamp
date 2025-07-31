@@ -1,4 +1,4 @@
-# Task 6: Chaos‑Driven Security Testing
+# Chaos‑Driven Security Testing
 
 ## Objective
 Simulate security faults in a safe environment to test detection, alerting, and remediation automation.
