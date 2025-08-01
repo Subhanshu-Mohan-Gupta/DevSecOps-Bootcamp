@@ -66,11 +66,3 @@ jobs:
               conftest test --policy policy/ tfplan.json 2>&1 | grep "FAIL" >> $GITHUB_STEP_SUMMARY || true
             fi
           fi
-
-
-
-
-      - name: Setup Task
-        run: |
-          echo "Running task: Enforce IaC Policies"
-          # Add tool installation or script execution here
