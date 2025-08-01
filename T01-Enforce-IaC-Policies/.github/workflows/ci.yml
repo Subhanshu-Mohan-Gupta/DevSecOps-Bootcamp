@@ -9,11 +9,66 @@ on:
       - 'T01-Enforce-IaC-Policies/**'
 
 jobs:
-  build:
+  iac-policy-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: T01-Enforce-IaC-Policies
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init
+        run: |
+          echo "Initializing Terraform..."
+          terraform init
+
+      - name: Terraform Validate
+        run: |
+          echo "Validating Terraform syntax..."
+          terraform validate
+
+      - name: Terraform Plan
+        run: |
+          echo "Creating Terraform plan..."
+          terraform plan -out=tfplan
+          terraform show -json tfplan > tfplan.json
+
+      - name: Run Security Policy Tests
+        run: |
+          echo "Running IaC security policy validation..."
+          if [ -d "policy" ]; then
+            echo "Found policy directory, running Conftest..."
+            conftest test --policy policy/ tfplan.json
+          else
+            echo "No policy directory found, skipping policy tests"
+            exit 1
+          fi
+
+
+       - name: Generate Policy Report
+        if: always()
+        run: |
+          echo "Generating policy compliance report..."
+          if [ -d "policy" ]; then
+            conftest test --policy policy/ tfplan.json --output json > policy-report.json
+            echo "## 🛡️ IaC Policy Check Results" >> $GITHUB_STEP_SUMMARY
+            if conftest test --policy policy/ tfplan.json > /dev/null 2>&1; then
+              echo "✅ **All security policies passed!**" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **Policy violations detected!**" >> $GITHUB_STEP_SUMMARY
+              echo "### Violations:" >> $GITHUB_STEP_SUMMARY
+              conftest test --policy policy/ tfplan.json 2>&1 | grep "FAIL" >> $GITHUB_STEP_SUMMARY || true
+            fi
+          fi
+
+
+
 
       - name: Setup Task
         run: |

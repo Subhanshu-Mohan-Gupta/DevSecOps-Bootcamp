@@ -1,0 +1,18 @@
+package terraform.s3
+
+deny[msg] {
+    input.resource.aws_s3_bucket[name].acl == "public-read"
+    msg := sprintf("S3 bucket '%s' should not have public-read ACL", [name])
+}
+
+deny[msg] {
+    input.resource.aws_s3_bucket[name].acl == "public-read-write"
+    msg := sprintf("S3 bucket '%s' should not have public-read-write ACL", [name])
+}
+
+deny[msg] {
+    bucket := input.resource.aws_s3_bucket[name]
+    not bucket.server_side_encryption_configuration
+    msg := sprintf("S3 bucket '%s' must have encryption enabled", [name])
+}
+
