@@ -1,19 +1,19 @@
-# Secure Software Supply Chain
+# T13 - Secure Supply Chain with Cosign
 
-## Objective
-Implement advanced security controls and automation for **Secure Software Supply Chain**.
+## Steps Performed
 
-## Tools & Setup
-Cosign, SLSA, in-toto
+1. Installed Cosign on Ubuntu 24.04
+2. Generated a key pair:
+3. Signed the Docker image:
+4. Verified the image:
+5. Signature verification is saved in `SIGNATURE_VERIFICATION.txt`.
 
-## Steps
-1. Enforce GPG‑signed commits in the repo settings.
-2. Generate a Cosign keypair and store it in `cosign-keypair/`.
-3. Sign container images in the CI pipeline.
-4. Generate provenance attestation using in‑toto or SLSA metadata.
-5. Verify signatures during deployment.
+## Notes
 
-## Deliverables
-- CI pipeline demonstrating all steps
-- Evidence logs or screenshots
-- Summary report
+- The keys are stored in `cosign-keypair/`
+- The image is now signed and verifiable by anyone with the public key.
+output:
+ - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - The signatures were verified against the specified public key
+
