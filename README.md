@@ -1,4 +1,3 @@
-````markdown
 # 🚀 DevSecOps Bootcamp Repository
 
 Welcome to the **DevSecOps Bootcamp**&nbsp; a hands-on training ground where you will harden code, pipelines, and infrastructure **one task at a time**. Everything you need is here: task folders, trackers, CI/CD guard-rails, and step-by-step guides.
