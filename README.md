@@ -39,7 +39,7 @@ Welcome to the **DevSecOps Bootcamp**&nbsp; a hands-on training ground where you
    ```bash
    git clone git@github.com:<your-user>/devsecops-bootcamp.git
    cd devsecops-bootcamp
-````
+   ```
 
 3. **Pick a task** from the tracker.
 4. **Create a feature branch** named `<your-github-username>/Txx`, e.g.
