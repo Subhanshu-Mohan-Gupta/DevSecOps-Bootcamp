@@ -1,7 +1,0 @@
-falcoctl:
-  config:
-    artifact:
-      install:
-        refs:
-          - falco-rules:4
-          - ghcr.io/falcosecurity/plugins/plugin/container:0.3.3
