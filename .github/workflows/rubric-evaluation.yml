@@ -52,12 +52,11 @@ jobs:
           echo "folders=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed folders: $CHANGED"
 
-      # 3) Install Python deps (pin httpx >=0.27 to avoid proxies arg bug)
       - name: Install Python deps
         run: |
-          python -m pip install --quiet "openai==1.14.3" "httpx>=0.27.0" pygithub
+          python -m pip install --quiet "openai==1.14.3" "httpx<=0.27.0" pygithub
 
-      # 4) Run evaluator
+
       - name: Run rubric evaluator
         env:
           GH_TOKEN: ${{ github.token }}
