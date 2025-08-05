@@ -11,20 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-=======
 
->>>>>>> 9d6c3a729f41a67a8e2f482dfcbbb3fbd1dc134e
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-<<<<<<< HEAD
-      - name: Setup Task
-        run: |
-          echo "Running task: Enforce IaC Policies"
-          # Add tool installation or script execution here
-=======
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -54,4 +45,3 @@ jobs:
         working-directory: T01-Enforce-IaC-Policies
         run: |
           conftest test tfplan.json --policy policy/
->>>>>>> 9d6c3a729f41a67a8e2f482dfcbbb3fbd1dc134e
