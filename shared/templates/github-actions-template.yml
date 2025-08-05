@@ -2,9 +2,9 @@ name: DevSecOps CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ final-submission-4302 ]
   pull_request:
-    branches: [ main ]
+    branches: [ final-submission-4302 ]
 
 jobs:
   build:
