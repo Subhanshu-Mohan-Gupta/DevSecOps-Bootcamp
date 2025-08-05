@@ -1,0 +1,6 @@
+falcosidekick:
+  enabled: true
+  config:
+    slack:
+      enabled: true
+      webhookurl: "https://hooks.slack.com/services/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"
