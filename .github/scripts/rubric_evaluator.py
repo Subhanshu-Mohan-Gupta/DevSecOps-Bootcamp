@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
-import os
-import sys
-import subprocess
-import textwrap
-import ast
-import datetime
+import os, sys, subprocess, textwrap, ast, re
 from pathlib import Path
 
 if not os.getenv("OPENAI_API_KEY"):
@@ -28,16 +23,11 @@ HEAD_SHA = os.getenv("HEAD_SHA")
 RUBRIC_PATH = Path("shared/templates/rubric.md")
 
 def git_diff(folder: str) -> str:
-    """Return diff limited to `folder` between BASE_SHA and HEAD_SHA."""
-    try:
-        out = subprocess.check_output(
-            ["git", "diff", BASE_SHA, HEAD_SHA, "--", folder],
-            text=True,
-            stderr=subprocess.STDOUT,
-        )
-        return out or "<no diff>"
-    except subprocess.CalledProcessError as exc:
-        return f"<diff error>\n{exc.output}"
+    return subprocess.check_output(
+        ["git", "diff", BASE_SHA, HEAD_SHA, "--", folder],
+        text=True,
+        stderr=subprocess.STDOUT,
+    ) or "<no diff>"
 
 def load_rubric() -> str:
     return RUBRIC_PATH.read_text(encoding="utf-8")
@@ -45,7 +35,7 @@ def load_rubric() -> str:
 def ai_review(rubric: str, diff: str) -> str:
     prompt = textwrap.dedent(f"""
     You are a senior DevSecOps mentor. Evaluate the submission using the rubric
-    (score 1-4 per criterion) and provide concise feedback.
+    (score 1–4 per criterion) and provide concise feedback.
 
     ### RUBRIC
     {rubric}
@@ -53,21 +43,20 @@ def ai_review(rubric: str, diff: str) -> str:
     ### CODE DIFF
     {diff}
     """)
-    response = openai.chat.completions.create(
-        model="gpt-4o-mini",
+    resp = openai.chat.completions.create(
+        model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
     )
-    return response.choices[0].message.content.strip()
+    return resp.choices[0].message.content.strip()
 
 def comment_on_pr(body: str):
-    repo = gh.get_repo(REPO)
-    pr   = repo.get_pull(PR_NUM)
-    pr.create_issue_comment(body)
+    gh.get_repo(REPO).get_pull(PR_NUM).create_issue_comment(body)
+
+DATE_ROW_REGEX = re.compile(r"^\|\s*Date\s*\|.*\|$", re.IGNORECASE)
 
 def main() -> None:
     rubric = load_rubric()
-    today  = datetime.date.today().strftime("%d %B %Y")
 
     for folder in FOLDERS:
         diff = git_diff(folder)
@@ -76,17 +65,12 @@ def main() -> None:
 
         feedback = ai_review(rubric, diff)
 
-        feedback = (
-            feedback
-            .replace("[Insert Date]", today)
-            .replace("[Date]", today)
+        feedback = "\n".join(
+            line for line in feedback.splitlines()
+            if not DATE_ROW_REGEX.match(line.strip())
         )
 
-        body = (
-            f"### 📝 AI Rubric Evaluation for **{folder}**\n\n"
-            f"**Date:** {today}\n\n"
-            f"{feedback}"
-        )
+        body = f"### 📝 AI Rubric Evaluation for **{folder}**\n\n{feedback}"
         comment_on_pr(body)
 
 if __name__ == "__main__":
