@@ -1,0 +1,14 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2025-08-05T14:55:58.201992976Z",
+  "ArtifactName": ".",
+  "ArtifactType": "filesystem",
+  "Metadata": {
+    "RepoURL": "https://github.com/Manisha148/DevSecOps-Bootcamp.git",
+    "Branch": "final-submission-4302",
+    "Commit": "aab502b7f973592d64d879ea8fca2d4f4c33008e",
+    "CommitMsg": "Fix folder nesting for T03",
+    "Author": "Ubuntu \u003cubuntu@ip-172-31-42-79.us-west-2.compute.internal\u003e",
+    "Committer": "Ubuntu \u003cubuntu@ip-172-31-42-79.us-west-2.compute.internal\u003e"
+  }
+}
