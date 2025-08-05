@@ -18,8 +18,8 @@ from github import Github
 openai.api_key = os.getenv("OPENAI_API_KEY")
 gh = Github(os.getenv("GH_TOKEN"))
 
-REPO   = os.getenv("GITHUB_REPOSITORY")
-PR_NUM = int(sys.argv[sys.argv.index("--pr") + 1])
+REPO    = os.getenv("GITHUB_REPOSITORY")
+PR_NUM  = int(sys.argv[sys.argv.index("--pr") + 1])
 FOLDERS = ast.literal_eval(sys.argv[sys.argv.index("--folders") + 1])
 
 BASE_SHA = os.getenv("BASE_SHA")
@@ -39,15 +39,13 @@ def git_diff(folder: str) -> str:
     except subprocess.CalledProcessError as exc:
         return f"<diff error>\n{exc.output}"
 
-
 def load_rubric() -> str:
     return RUBRIC_PATH.read_text(encoding="utf-8")
-
 
 def ai_review(rubric: str, diff: str) -> str:
     prompt = textwrap.dedent(f"""
     You are a senior DevSecOps mentor. Evaluate the submission using the rubric
-    (score 1–4 per criterion) and provide concise feedback.
+    (score 1-4 per criterion) and provide concise feedback.
 
     ### RUBRIC
     {rubric}
@@ -62,16 +60,14 @@ def ai_review(rubric: str, diff: str) -> str:
     )
     return response.choices[0].message.content.strip()
 
-
 def comment_on_pr(body: str):
     repo = gh.get_repo(REPO)
     pr   = repo.get_pull(PR_NUM)
     pr.create_issue_comment(body)
 
-
 def main() -> None:
     rubric = load_rubric()
-    today  = datetime.date.today().strftime("%d %B %Y") 
+    today  = datetime.date.today().strftime("%d %B %Y")
 
     for folder in FOLDERS:
         diff = git_diff(folder)
@@ -80,13 +76,18 @@ def main() -> None:
 
         feedback = ai_review(rubric, diff)
 
+        feedback = (
+            feedback
+            .replace("[Insert Date]", today)
+            .replace("[Date]", today)
+        )
+
         body = (
             f"### 📝 AI Rubric Evaluation for **{folder}**\n\n"
             f"**Date:** {today}\n\n"
             f"{feedback}"
         )
         comment_on_pr(body)
-
 
 if __name__ == "__main__":
     main()
