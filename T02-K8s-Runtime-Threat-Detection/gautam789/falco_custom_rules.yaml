@@ -1,0 +1,26 @@
+# falco_custom_rules.yaml
+
+- rule: Kubernetes Exec Detection
+  desc: Detect usage of kubectl exec into containers
+  condition: >
+    spawned_process and container and proc.name = bash and k8s.client.name contains "kubectl"
+  output: "🚨 Kubectl exec detected in container (user=%user.name command=%proc.cmdline container=%container.name)"
+  priority: WARNING
+  tags: [k8s, mitre_execution]
+
+- rule: Unexpected Outbound Connection
+  desc: Detect outbound connection from container to internet
+  condition: >
+    outbound and fd.sip != 127.0.0.1 and container
+  output: "🚨 Outbound connection to external IP (command=%proc.cmdline container=%container.name dest=%fd.sip)"
+  priority: WARNING
+  tags: [network]
+
+- rule: Shell Spawned in Container
+  desc: Detect shell process (bash, sh, zsh) in container
+  condition: >
+    spawned_process and container and proc.name in (bash, sh, zsh)
+  output: "🚨 Shell spawned in container (cmd=%proc.cmdline user=%user.name)"
+  priority: WARNING
+  tags: [shell]
+
