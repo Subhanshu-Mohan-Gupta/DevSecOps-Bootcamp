@@ -1,0 +1,26 @@
+falco:
+  # Use the eBPF driver (no kernel modules to compile)
+  driver:
+    kind: ebpf
+
+  grpcOutput:
+    enabled: true        # needed by Falcosidekick
+  httpOutput:
+    enabled: true        # fallback output
+  webserver:
+    enabled: true        # health and metrics
+
+falcosidekick:
+  enabled: true
+  image:
+    tag: latest          # keep up-to-date
+  config:
+    teams:
+      webhookurl: "https://txplin.webhook.office.com/webhookb2/4628d6d0-2863-4bf6-b632-b91e7e2d3453@d7e861c9-d924-4413-86db-05780e928657/IncomingWebhook/bb23308683c64d5b98477fa77e0092ef/badae48e-37cd-44f0-beb6-84a28cdb5a7a/V2Z4d84o0oUUIkBFkuOWHGkQfIoDA3ydNQtoXP4STCwIA1"
+      activityimage: "https://falco.org/img/brand/falco-logo.png"
+      outputformat: "all"
+      minimumpriority: "notice"
+    # include useful fields in every alert
+    customfields: |
+      user.name,proc.cmdline,container.name,container.image.repository,k8s.pod.name,k8s.ns.name
+
