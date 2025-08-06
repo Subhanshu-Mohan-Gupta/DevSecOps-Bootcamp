@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: falco-custom-rules
+  namespace: falco
+data:
+  k8s_audit_rules.yaml: |
+    # Kubernetes Runtime Threat Detection Rules
+
+    - rule: Kubectl Exec Detected
+      desc: Detect kubectl exec command execution
+      condition: >
+        spawned_process and
+        proc.name = "kubectl" and
+        proc.args contains "exec"
+      output: >
+        Kubectl exec command detected (user=%user.name command=%proc.cmdline 
+        k8s.pod=%k8s.pod.name k8s.ns=%k8s.ns.name)
+      priority: WARNING
+      tags: [kubernetes, kubectl, mitre_execution]
+
+    - rule: Suspicious Network Tool Execution
+      desc: Detect execution of network reconnaissance tools
+      condition: >
+        spawned_process and
+        container and
+        proc.name in (nmap, nc, netcat, wget, curl, ping, telnet, ssh)
+      output: >
+        Suspicious network tool executed in container
+      priority: WARNING
+      tags: [network, container, mitre_discovery, T1046]
+
+    - rule: Sensitive File Access
+      desc: Detect access to sensitive system files
+      condition: >
+        open_read and
+        container and
+        fd.name in (/etc/shadow, /etc/passwd, /etc/sudoers, /root/.ssh/id_rsa, 
+                    /root/.ssh/id_dsa, /etc/kubernetes/admin.conf)
+      output: >
+        Sensitive file accessed in container
+      priority: HIGH
+      tags: [filesystem, container, mitre_credential_access, T1555]
+
+
+    - rule: Unexpected Network Outbound Connection
+      desc: Detect suspicious outbound network connections
+      condition: >
+        outbound and
+        container and
+        not fd.net_conn.is_server and
+        fd.snet.name != "127.0.0.0/8" and
+        not proc.name in (kubelet, kube-proxy, coredns)
+      output: >
+        Unexpected outbound connection from container
+      priority: WARNING
+      tags: [network, container, mitre_command_and_control, T1071]
