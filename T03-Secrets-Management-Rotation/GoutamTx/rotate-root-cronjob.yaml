@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: rotate-db-root
+spec:
+  schedule: "0 */6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: app-sa
+          containers:
+          - name: rotate
+            image: hashicorp/vault
+            command: ["/bin/sh", "-c"]
+            args: ["vault write -force database/rotate-root/my-postgres-database"]
+            env:
+            - name: VAULT_ADDR
+              value: "http://vault.vault.svc.cluster.local:8200"
+            - name: VAULT_TOKEN
+              value: "root"
+          restartPolicy: OnFailure
