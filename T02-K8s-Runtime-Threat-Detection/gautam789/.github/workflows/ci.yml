@@ -1,0 +1,41 @@
+name: K8s Runtime Threat Detection CI
+
+on:
+  push:
+    paths:
+      - 'T02-K8s-Runtime-Threat-Detection/**'
+  pull_request:
+    paths:
+      - 'T02-K8s-Runtime-Threat-Detection/**'
+
+jobs:
+  deploy-falco:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+
+    - name: 🛠 Set up Kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: 📦 Set up Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: 'latest'
+
+    - name: 🗂 Copy Kubeconfig from Secret
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG_CONTENT }}" > ~/.kube/config
+
+    - name: 🚀 Deploy Falco with Falcosidekick
+      run: |
+        helm repo add falcosecurity https://falcosecurity.github.io/charts
+        helm repo update
+        helm upgrade --install falco falcosecurity/falco \
+          -n falco \
+          --create-namespace \
+          -f falco-values.yaml
