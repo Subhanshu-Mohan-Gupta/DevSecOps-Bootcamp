@@ -13,8 +13,8 @@ jobs:
 
       - name: Set Vault Env Variables
         run: |
-          export VAULT_ADDR='http://127.0.0.1:8200'
-          export VAULT_TOKEN='root'
+          export VAULT_ADDR=${{ secrets.VAULT_ADDR }}
+          export VAULT_TOKEN=${{ secrets.VAULT_SETUP_TOKEN }}
 
           # Enable secrets engine
           vault secrets enable database || true
