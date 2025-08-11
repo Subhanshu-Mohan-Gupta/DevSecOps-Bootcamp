@@ -1,0 +1,15 @@
+task_id: T18
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "policies/**/*.yaml"
+  - "tests/**/*.yaml"
+required_concepts:
+  - "kyverno"
+  - "validate"
+  - "mutate"
+  - "generate"
+  - "privileged"
+  - "readonlyrootfilesystem"
+allowed_extensions: [ .yaml, .yml, .json, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

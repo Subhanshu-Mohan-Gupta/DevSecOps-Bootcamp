@@ -1,0 +1,22 @@
+task_id: T01
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "policies/**/*.rego"
+  - "**/*.tf"
+required_concepts:
+  - "opa"
+  - "rego"
+  - "sentinel"
+  - "terraform validate"
+  - "policy-as-code"
+allowed_extensions:
+  - .tf
+  - .hcl
+  - .rego
+  - .yaml
+  - .yml
+  - .json
+  - .md
+  - .sh
+rubric_path: "../../shared/templates/rubric.md"

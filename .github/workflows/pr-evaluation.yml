@@ -1,0 +1,130 @@
+name: PR Evaluation (Static + AI Rubric)
+
+# Secrets needed for AI only; we use pull_request_target so forks can be evaluated.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: rubric-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  add-ai-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request Copilot reviewer
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo:  context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: ["github-copilot[bot]"]
+              });
+            } catch (e) {
+              core.info("Copilot reviewer not added (maybe already present): " + e.message);
+            }
+
+  static-checks:
+    runs-on: ubuntu-latest
+    outputs:
+      folders: ${{ steps.detect.outputs.folders }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Check out the PR head, but this job runs NO untrusted code
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Export SHAs for diff
+        run: |
+          echo "BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
+          echo "HEAD_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+
+      - name: Detect changed task folders
+        id: detect
+        run: |
+          CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" \
+            | grep -oE '^T[0-9]{2}[^/]+' \
+            | sort -u \
+            | jq -R -s -c 'split("\n")[:-1]')
+          echo "folders=$CHANGED" >> $GITHUB_OUTPUT
+          echo "Changed folders: $CHANGED"
+
+      - name: Inventory files (safe static report)
+        run: |
+          python - <<'PY'
+          import json, os, ast
+          from pathlib import Path
+
+          folders = os.getenv("FOLDERS")
+          if not folders or folders == "[]":
+              Path("static_report.json").write_text(json.dumps({"folders":[]}, indent=2))
+              raise SystemExit(0)
+
+          folders = ast.literal_eval(folders)
+          report = {"folders": []}
+          for f in folders:
+              root = Path(f)
+              exists = root.exists()
+              files = []
+              if exists:
+                  for p in root.rglob("*"):
+                      if p.is_file():
+                          files.append(str(p))
+              report["folders"].append({"folder": f, "exists": exists, "files": files})
+
+          Path("static_report.json").write_text(json.dumps(report, indent=2))
+          PY
+        env:
+          FOLDERS: ${{ steps.detect.outputs.folders }}
+
+      - name: Upload static report
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-report
+          path: static_report.json
+
+  rubric-evaluation:
+    runs-on: ubuntu-latest
+    needs: [add-ai-reviewer, static-checks]
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Export SHAs for diff
+        run: |
+          echo "BASE_SHA=${{ github.event.pull_request.base.sha }}" >> $GITHUB_ENV
+          echo "HEAD_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+
+      - name: Download static report
+        uses: actions/download-artifact@v4
+        with:
+          name: static-report
+          path: ./reports
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          # httpx < 0.27 to avoid the proxies kwarg mismatch in OpenAI 1.14.x
+          python -m pip install --quiet "openai==1.14.3" "httpx<0.27.0" pygithub pyyaml
+
+      - name: Run rubric evaluator
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python .github/scripts/rubric_evaluator.py \
+            --folders '${{ needs.static-checks.outputs.folders }}' \
+            --pr '${{ github.event.pull_request.number }}'

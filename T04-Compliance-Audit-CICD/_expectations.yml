@@ -1,0 +1,17 @@
+task_id: T04
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - ".semgrep.yml"
+  - "semgrep/*.yml"
+  - "trivy/*.yml"
+  - "reports/**/docker-bench*.txt"
+required_concepts:
+  - "semgrep"
+  - "trivy"
+  - "docker bench"
+  - "cvss"
+  - "threshold"
+  - "pipeline fail"
+allowed_extensions: [ .yaml, .yml, .json, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

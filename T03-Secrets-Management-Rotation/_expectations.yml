@@ -1,0 +1,17 @@
+task_id: T03
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "vault/**/*.hcl"
+  - "k8s/**/*.yaml"
+  - "scripts/rotate*.py"
+  - "scripts/rotate*.sh"
+required_concepts:
+  - "vault"
+  - "rotation"
+  - "dynamic"
+  - "csi"
+  - "agent"
+  - "database"
+allowed_extensions: [ .hcl, .yaml, .yml, .json, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"
