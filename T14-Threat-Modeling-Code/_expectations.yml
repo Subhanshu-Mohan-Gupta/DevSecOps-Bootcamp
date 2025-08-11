@@ -1,0 +1,16 @@
+task_id: T14
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "**/*.threatspec"
+  - "diagrams/**/*.puml"
+  - "diagrams/**/*.md"
+required_concepts:
+  - "threatspec"
+  - "dfd"
+  - "mitigation"
+  - "plantuml"
+  - "mermaid"
+  - "stride"
+allowed_extensions: [ .md, .puml, .yaml, .yml, .json, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

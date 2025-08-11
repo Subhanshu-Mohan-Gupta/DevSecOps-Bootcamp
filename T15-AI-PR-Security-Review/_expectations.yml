@@ -1,0 +1,14 @@
+task_id: T15
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "snyk/*.yaml"
+  - ".snyk"
+required_concepts:
+  - "snyk code"
+  - "deepcode"
+  - "pull request"
+  - "inline comments"
+  - "false positives"
+allowed_extensions: [ .yaml, .yml, .json, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"
