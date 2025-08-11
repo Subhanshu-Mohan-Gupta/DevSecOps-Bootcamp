@@ -1,0 +1,19 @@
+task_id: TXX
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+required_concepts: []
+allowed_extensions:
+  - .tf
+  - .hcl
+  - .rego
+  - .yaml
+  - .yml
+  - .json
+  - .md
+  - .py
+  - .sh
+  - .Dockerfile
+  - Dockerfile
+  - .tpl
+rubric_path: "./rubric.md"
