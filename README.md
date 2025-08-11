@@ -1,6 +1,6 @@
 # 🚀 DevSecOps Bootcamp Repository
 
-Welcome to the **DevSecOps Bootcamp**&nbsp;: a hands-on training ground where you harden code, pipelines, and infrastructure **one task at a time**.  
+Welcome to the **DevSecOps Bootcamp**&nbsp;- a hands-on training ground where you harden code, pipelines, and infrastructure **one task at a time**.  
 Everything you need is here: task folders, trackers, CI/CD guard-rails, **data-driven PR evaluations**, and step-by-step guides.
 
 ---
@@ -119,7 +119,7 @@ allowed_extensions: [ .hcl, .yaml, .yml, .json, .md, .py, .sh ]
 rubric_path: "../../shared/templates/rubric.md"
 ```
 
-We’ve added tailored `_expectations.yml` to all shipped tasks:
+I’ve added tailored `_expectations.yml` to all shipped tasks:
 
 * `T01-Enforce-IaC-Policies/_expectations.yml`
 * `T02-K8s-Runtime-Threat-Detection/_expectations.yml`
