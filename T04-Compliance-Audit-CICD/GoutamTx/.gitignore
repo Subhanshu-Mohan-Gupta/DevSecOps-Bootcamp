@@ -1,0 +1,6 @@
+# Ignore every GoutamTx folder
+**/GoutamTx/
+
+# Allow GoutamTx inside T04-Compliance-Audit-CICD
+!T04-Compliance-Audit-CICD/GoutamTx/
+
