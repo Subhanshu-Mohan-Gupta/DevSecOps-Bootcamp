@@ -8,6 +8,10 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: rubric-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   add-ai-reviewer:
     runs-on: ubuntu-latest
@@ -33,7 +37,7 @@ jobs:
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -47,16 +51,19 @@ jobs:
         id: detect
         run: |
           CHANGED=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" \
-                    | grep -oE '^T[0-9]{2}[^/]+' \
-                    | sort -u | jq -R -s -c 'split("\n")[:-1]')
+            | grep -oE '^T[0-9]{2}[^/]+' \
+            | sort -u \
+            | jq -R -s -c 'split("\n")[:-1]')
           echo "folders=$CHANGED" >> $GITHUB_OUTPUT
           echo "Changed task folders: $CHANGED"
 
       - name: Install Python deps
         run: |
+          python -m pip install --upgrade pip
           python -m pip install --quiet "openai==1.14.3" "httpx<0.27.0" pygithub
 
       - name: Run rubric evaluator
+        if: ${{ steps.detect.outputs.folders != '[]' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
