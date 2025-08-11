@@ -1,4 +1,3 @@
-````markdown
 # 🚀 DevSecOps Bootcamp Repository
 
 Welcome to the **DevSecOps Bootcamp**&nbsp;: a hands-on training ground where you harden code, pipelines, and infrastructure **one task at a time**.  
@@ -42,7 +41,7 @@ Everything you need is here: task folders, trackers, CI/CD guard-rails, **data-d
    ```bash
    git clone git@github.com:<your-user>/devsecops-bootcamp.git
    cd devsecops-bootcamp
-````
+   ````
 
 3. **Pick a task** from the tracker.
 4. **Create a feature branch** named `<your-github-username>/Txx`, e.g.:
@@ -180,5 +179,3 @@ A **default** is also available at `shared/templates/_expectations.yml` (used if
 * **Templates & examples:** see `/shared/templates/` for starter code and CI snippets
 
 Happy hardening & shipping secure software! 💪
-
-```
