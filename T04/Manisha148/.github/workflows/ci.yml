@@ -1,0 +1,49 @@
+name: T04 Compliance Audit
+
+on:
+  push:
+    paths:
+      - 'T04/Manisha148/**'
+  pull_request:
+    paths:
+      - 'T04/Manisha148/**'
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Semgrep
+        run: pip install semgrep
+      - name: Run Semgrep Scan
+        run: semgrep --config=auto T04/Manisha148/app --json > T04/Manisha148/reports/semgrep.json
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+      - name: Run Trivy FS Scan
+        run: ./trivy fs --exit-code 1 --severity HIGH,CRITICAL T04/Manisha148/app --format json > T04/Manisha148/reports/trivy-fs.json
+      - name: Run Trivy Image Scan
+        run: |
+          echo "FROM python:3.9-slim" > Dockerfile
+          docker build -t t04-image .
+          ./trivy image --exit-code 1 --severity HIGH,CRITICAL t04-image --format json > T04/Manisha148/reports/trivy-image.json
+
+  docker-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Docker Bench Security
+        run: |
+          docker run --net host --pid host --userns host --cap-add audit_control \
+            -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
+            -v /etc:/etc:ro \
+            -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
+            -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+            -v /usr/lib/systemd:/usr/lib/systemd:ro \
+            -v /var/lib:/var/lib:ro \
+            -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            docker/docker-bench-security > T04/Manisha148/reports/docker-bench.txt
