@@ -1,0 +1,16 @@
+task_id: T06
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "chaos/**/*.json"
+  - "chaos/**/*.yaml"
+  - "litmus/**/*.yaml"
+required_concepts:
+  - "chaos"
+  - "fault"
+  - "experiment"
+  - "resilience"
+  - "network blackhole"
+  - "pod kill"
+allowed_extensions: [ .json, .yaml, .yml, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"
