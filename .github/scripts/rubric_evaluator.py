@@ -11,7 +11,7 @@ if not os.getenv("OPENAI_API_KEY"):
 import openai
 from github import Github
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-4o"
 MAX_TOTAL_CHARS = 60000
 MAX_DIFF_CHARS  = 45000
 MIN_CHUNK_CHARS = 8000
