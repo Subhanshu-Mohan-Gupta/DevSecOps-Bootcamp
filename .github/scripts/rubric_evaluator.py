@@ -56,7 +56,7 @@ def ai_review(rubric: str, diff: str) -> str:
     {diff}
     """)
     response = openai.chat.completions.create(
-        model="o3-deep-research",
+        model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
     )
