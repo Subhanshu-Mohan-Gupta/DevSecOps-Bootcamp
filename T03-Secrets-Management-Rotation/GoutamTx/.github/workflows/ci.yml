@@ -1,0 +1,60 @@
+name: Vault Secret Rotation Automation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-and-rotate:
+    runs-on: [self-hosted, linux]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set Vault Env Variables
+        run: |
+          export VAULT_ADDR=${{ secrets.VAULT_ADDR }}
+          export VAULT_TOKEN=${{ secrets.VAULT_SETUP_TOKEN }}
+
+          # Enable secrets engine
+          vault secrets enable database || true
+
+          # Configure Postgres connection
+          vault write database/config/my-postgres-database \
+            plugin_name=postgresql-database-plugin \
+            allowed_roles="app-role" \
+            connection_url="postgresql://{{username}}:{{password}}@postgres.default.svc.cluster.local:5432/appdb?sslmode=disable" \
+            username="postgres" \
+            password="admin"
+
+          # Create a DB role
+          vault write database/roles/app-role \
+            db_name=my-postgres-database \
+            creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT ALL PRIVILEGES ON DATABASE appdb TO \"{{name}}\";" \
+            default_ttl="1h" \
+            max_ttl="24h"
+
+          # Enable Kubernetes Auth
+          vault auth enable kubernetes || true
+
+          # Configure Kubernetes Auth
+          vault write auth/kubernetes/config \
+            token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+            kubernetes_host="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT" \
+            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+          # Map the Kubernetes ServiceAccount to Vault Role
+          vault write auth/kubernetes/role/myapp-role \
+            bound_service_account_names=vault-auth \
+            bound_service_account_namespaces=default \
+            policies=app-policy \
+            ttl=24h
+
+      - name: Deploy MyApp
+        run: |
+          kubectl apply -f myapp-deployment.yaml
+
+      - name: Deploy CronJob for Root Rotation
+        run: |
+          kubectl apply -f rotate-root-cronjob.yaml
+
