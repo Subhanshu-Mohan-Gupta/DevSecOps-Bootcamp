@@ -1,0 +1,4 @@
+fail_on:
+  CRITICAL: 1
+  HIGH: 5
+cvss_threshold: 9.0
