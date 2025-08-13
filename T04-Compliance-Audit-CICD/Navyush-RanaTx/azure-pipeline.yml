@@ -1,0 +1,113 @@
+trigger: none
+
+pool:
+  name: 'wsl'
+
+stages:
+- stage: Compliance
+  displayName: "Automated Compliance Auditing"
+  jobs:
+  - job: ComplianceChecks
+    displayName: "Run compliance scans"
+    steps:
+    - checkout: self
+      persistCredentials: true  
+
+    - script: |
+        echo "Installing docker buildx..."
+        mkdir -p ~/.docker/cli-plugins
+        curl -SL https://github.com/docker/buildx/releases/download/v0.15.1/buildx-v0.15.1.linux-amd64 \
+          -o ~/.docker/cli-plugins/docker-buildx
+        chmod +x ~/.docker/cli-plugins/docker-buildx
+        docker buildx version
+      displayName: Install Docker Buildx
+
+    - task: Bash@3
+      displayName: "Build Docker image"
+      inputs:
+        targetType: 'inline'
+        script: |
+          IMAGE_NAME=ci-example:${BUILD_SOURCEVERSION:0:8}
+          docker build -t $IMAGE_NAME .
+      env:
+        DOCKER_BUILDKIT: '1'
+
+    - task: Bash@3
+      displayName: "Run Semgrep"
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p compliance-output
+          semgrep --config=auto --no-git-ignore --json --timeout 120 \
+            -o compliance-output/semgrep.json || true
+
+    - task: Bash@3
+      displayName: "Trivy - Filesystem scan"
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p compliance-output
+          trivy fs --quiet --format json --output compliance-output/trivy-deps.json . || true
+
+    - task: Bash@3
+      displayName: "Trivy - Image scan"
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p compliance-output
+          IMAGE_NAME=ci-example:${BUILD_SOURCEVERSION:0:8}
+          trivy image --quiet --format json --output compliance-output/trivy-image.json $IMAGE_NAME || true
+
+    - task: Bash@3
+      displayName: "Docker Bench Security"
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p compliance-output
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v /etc:/etc:ro -v /usr/bin:/usr/bin:ro \
+            --net host --pid host \
+            docker/docker-bench-security:latest -f json > compliance-output/docker-bench.json || true
+
+    - task: Bash@3
+      displayName: "Aggregate & evaluate results"
+      inputs:
+        targetType: 'inline'
+        script: |
+          mkdir -p compliance-output
+          chmod +x .ci/aggregate.py
+          python3 .ci/aggregate.py \
+            --semgrep compliance-output/semgrep.json \
+            --trivy-deps compliance-output/trivy-deps.json \
+            --trivy-image compliance-output/trivy-image.json \
+            --docker-bench compliance-output/docker-bench.json \
+            --policy .ci/policy.yaml \
+            --out compliance-output/compliance-report.json \
+            --html-out compliance-output/compliance-report.html
+
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish compliance artifacts"
+      condition: always()
+      inputs:
+        PathtoPublish: 'compliance-output'
+        ArtifactName: 'compliance-report'
+        publishLocation: 'Container'
+
+    - script: |
+        set -eux
+        git config user.email "pipeline@dev.azure.com"
+        git config user.name "Azure Pipelines"
+
+        mkdir -p reports
+        cp compliance-output/compliance-report.json reports/
+        cp compliance-output/compliance-report.html reports/
+
+        git add reports/
+        git commit -m "Add compliance report [skip ci]" || echo "No changes to commit"
+        
+        git push origin HEAD:$(Build.SourceBranchName)
+      displayName: "Commit compliance report to repo"
+      condition: always()
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
