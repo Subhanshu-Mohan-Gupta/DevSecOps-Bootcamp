@@ -1,0 +1,29 @@
+falco:
+  driver:
+    kind: ebpf  # Use eBPF (no need to build kernel module, great for Minikube)
+
+  grpcOutput:
+    enabled: true        # Needed by Falcosidekick to receive data
+
+  httpOutput:
+    enabled: true        # Sends alerts over HTTP (to Falcosidekick)
+
+  webserver:
+    enabled: true        # Enables Falco's metrics/health endpoints
+
+falcosidekick:
+  enabled: true
+
+  image:
+    tag: latest          # Pull the latest Falcosidekick image
+
+  config:
+    teams:
+      webhookurl: "https://txplin.webhook.office.com/webhookb2/4628d6d0-2863-4bf6-b632-b91e7e2d3453@d7e861c9-d924-4413-86db-05780e928657/IncomingWebhook/e9e1d84af1cc4ed2bf7d94569054251b/a9df7955-2d89-41c2-a0f6-90d4c8d68616/V2g6Bga6_1O0BBQf7c3QtleSqM6sCilXKaOuq0U3-Hnjo1"  # Replace with your actual webhook
+      activityimage: "https://falco.org/img/brand/falco-logo.png"
+      outputformat: "all"
+      minimumpriority: "notice"  # Only send alerts with notice and above
+
+    customfields: |
+      user.name,proc.cmdline,container.name,container.image.repository,k8s.pod.name,k8s.ns.name
+

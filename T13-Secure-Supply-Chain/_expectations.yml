@@ -1,0 +1,17 @@
+task_id: T13
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "cosign-keypair/*"
+  - "provenance/**/*"
+  - "slsa/**/*"
+required_concepts:
+  - "cosign"
+  - "sign"
+  - "verify"
+  - "slsa"
+  - "in-toto"
+  - "provenance"
+  - "attest"
+allowed_extensions: [ .yaml, .yml, .json, .md, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

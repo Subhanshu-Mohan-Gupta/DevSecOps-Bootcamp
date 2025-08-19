@@ -1,0 +1,16 @@
+task_id: T16
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "manifests/**/*.yaml"
+  - "falco/*.yaml"
+  - "elk/**/*.json"
+required_concepts:
+  - "dvwa"
+  - "honeypot"
+  - "falco"
+  - "elk"
+  - "kibana"
+  - "ttp"
+allowed_extensions: [ .yaml, .yml, .json, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"
