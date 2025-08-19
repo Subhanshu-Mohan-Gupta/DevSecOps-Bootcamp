@@ -1,0 +1,41 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosExperiment
+metadata:
+  name: token-revoke
+  namespace: demo
+  labels:
+    name: token-revoke
+    app.kubernetes.io/part-of: litmus
+    app.kubernetes.io/component: chaosexperiment
+spec:
+  definition:
+    scope: Namespaced
+    permissions:
+      - apiGroups: [""]
+        resources: ["pods"]
+        verbs: ["list","get","patch","update"]
+      - apiGroups: [""]
+        resources: ["events"]
+        verbs: ["create"]
+    image: "ubuntu:20.04"
+    imagePullPolicy: Always
+    args:
+    - -c
+    - |
+      apt-get update && apt-get install -y curl
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl && mv kubectl /usr/local/bin/
+      echo "Starting token revocation simulation"
+      kubectl annotate pods -l app=nginx security.token.revoked=true -n demo --overwrite
+      echo "Token revocation annotation added"
+      sleep ${TOTAL_CHAOS_DURATION:-30}
+      kubectl annotate pods -l app=nginx security.token.revoked- -n demo
+      echo "Token revocation simulation completed"
+    command:
+    - /bin/bash
+    env:
+    - name: TOTAL_CHAOS_DURATION
+      value: '30'
+    labels:
+      name: token-revoke
+

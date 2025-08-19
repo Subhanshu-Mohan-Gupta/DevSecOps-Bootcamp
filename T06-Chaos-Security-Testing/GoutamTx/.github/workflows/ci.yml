@@ -1,0 +1,126 @@
+name: Chaos-Driven Security Testing
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      experiment_duration:
+        description: 'Chaos experiment duration in seconds'
+        required: false
+        default: '30'
+        type: string
+
+env:
+  KUBECONFIG: /tmp/kubeconfig
+  EXPERIMENT_DURATION: ${{ github.event.inputs.experiment_duration || '30' }}
+
+jobs:
+  chaos-security-testing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Create Kind Kubernetes Cluster
+      uses: helm/kind-action@v1.8.0
+      with:
+        cluster_name: chaos-lab
+
+    - name: Install LitmusChaos and Setup Environment
+      run: |
+        echo "Installing LitmusChaos Operator..."
+        kubectl create ns litmus
+        kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v1.13.8.yaml -n litmus
+        kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=litmus -n litmus --timeout=300s
+        
+        echo "Deploying target application..."
+        kubectl create ns demo
+        kubectl apply -f nginx-deployment.yaml
+        kubectl apply -f litmus-admin-rbac.yaml
+        kubectl wait --for=condition=ready pod -l app=nginx -n demo --timeout=300s
+
+    - name: Deploy and Execute Chaos Experiments
+      run: |
+        echo "Deploying chaos experiments..."
+        kubectl apply -f chaos/
+        kubectl get chaosexperiment -n demo
+        
+        echo "Executing chaos engines..."
+        # Update duration if needed
+        [ "${{ env.EXPERIMENT_DURATION }}" != "30" ] && sed -i "s/value: '30'/value: '${{ env.EXPERIMENT_DURATION }}'/g" litmus/*/*.yaml
+        
+        kubectl apply -f litmus/
+        kubectl get chaosengine -n demo
+
+    - name: Wait and Collect Results
+      run: |
+        echo "Waiting for experiments to complete..."
+        sleep $(( ${{ env.EXPERIMENT_DURATION }} + 120 ))  # Experiment duration + 2 minutes buffer
+        
+        echo "=== Final Status ==="
+        kubectl get chaosengine -n demo -o wide
+        kubectl get pods -n demo | grep runner
+        
+        echo "=== Experiment Logs ==="
+        for pod in $(kubectl get pods -n demo | grep runner | awk '{print $1}'); do
+          echo "--- $pod ---"
+          kubectl logs $pod -n demo || echo "No logs available"
+        done
+        
+        echo "=== Target Pod Status ==="
+        kubectl describe pods -l app=nginx -n demo | grep -E "Annotations|Labels|Status"
+
+    - name: Validate and Report
+      run: |
+        # Quick validation
+        completed=$(kubectl get chaosengine -n demo -o json | jq '[.items[] | select(.status.engineStatus == "completed")] | length' 2>/dev/null || echo "0")
+        total=$(kubectl get chaosengine -n demo -o json | jq '.items | length' 2>/dev/null || echo "0")
+        
+        echo "Results: $completed/$total experiments completed"
+        
+        # Generate summary
+        cat > experiment-summary.md << EOF
+        # Chaos Experiment Summary
+        **Date:** $(date)
+        **Status:** $([ "$completed" -eq "$total" ] && [ "$total" -gt "0" ] && echo "✅ SUCCESS" || echo "❌ FAILED")
+        **Experiments:** $completed/$total completed
+        **Duration:** ${{ env.EXPERIMENT_DURATION }}s each
+        
+        ## ChaosEngines
+        $(kubectl get chaosengine -n demo --no-headers | awk '{print "- " $1 ": " $2}')
+        
+        ## Security Events Generated
+        - Token revocation simulation
+        - Network blackhole simulation  
+        - Pod compromise simulation
+        EOF
+        
+        cat experiment-summary.md
+        
+        # Fail if experiments didn't complete
+        [ "$completed" -ne "$total" ] && exit 1 || echo "✅ All experiments successful!"
+
+    - name: Archive Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: chaos-results-${{ github.run_number }}
+        path: experiment-summary.md
+        retention-days: 7
+
+    - name: Cleanup
+      if: always()
+      run: |
+        kubectl delete ns demo litmus --ignore-not-found=true --timeout=60s

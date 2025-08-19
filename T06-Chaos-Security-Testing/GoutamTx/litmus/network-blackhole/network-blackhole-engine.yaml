@@ -1,0 +1,41 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: network-blackhole-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: network-blackhole
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '60'
+            - name: CHAOS_INTERVAL
+              value: '10'
+            - name: TARGET_NAMESPACE
+              value: 'demo'
+            - name: APP_LABEL
+              value: 'app=nginx'
+            - name: NETWORK_PACKET_LOSS_PERCENTAGE
+              value: '100'
+        probe:
+          - name: "check-network-connectivity"
+            type: "httpProbe"
+            mode: "Continuous"
+            runProperties:
+              probeTimeout: 5
+              retry: 3
+              interval: 2
+            httpProbe/inputs:
+              url: "http://nginx-service.demo.svc.cluster.local"
+              method:
+                get:
+                  criteria: "=="
+                  responseCode: "200"
+
