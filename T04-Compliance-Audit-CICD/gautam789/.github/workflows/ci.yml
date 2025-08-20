@@ -1,0 +1,71 @@
+name: T04 Compliance Audit - gautam789
+
+on:
+  push:
+    paths:
+      - 'T04/gautam789/**'
+  pull_request:
+    paths:
+      - 'T04/gautam789/**'
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Semgrep
+        run: pip install semgrep
+      - name: Run Semgrep Scan
+        run: |
+          mkdir -p T04/gautam789/reports
+          semgrep --config=auto T04/gautam789/app \
+            --json > T04/gautam789/reports/semgrep.json
+
+  trivy-fs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+      - name: Run Trivy FS Scan (Fail on HIGH/CRITICAL)
+        run: |
+          mkdir -p T04/gautam789/reports
+          ./trivy fs --exit-code 1 --severity HIGH,CRITICAL \
+            --format json -o T04/gautam789/reports/trivy-fs.json \
+            T04/gautam789/app
+
+  trivy-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+      - name: Build Docker Image
+        run: |
+          echo "FROM python:3.9-slim" > Dockerfile
+          docker build -t t04-gautam789-image .
+      - name: Run Trivy Image Scan (Fail on HIGH/CRITICAL)
+        run: |
+          mkdir -p T04/gautam789/reports
+          ./trivy image --exit-code 1 --severity HIGH,CRITICAL \
+            --format json -o T04/gautam789/reports/trivy-image.json \
+            t04-gautam789-image
+
+  docker-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Docker Bench Security
+        run: |
+          mkdir -p T04/gautam789/reports
+          docker run --net host --pid host --userns host --cap-add audit_control \
+            -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
+            -v /etc:/etc:ro \
+            -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
+            -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+            -v /usr/lib/systemd:/usr/lib/systemd:ro \
+            -v /var/lib:/var/lib:ro \
+            -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            docker/docker-bench-security > T04/gautam789/reports/docker-bench.txt
+

@@ -1,0 +1,45 @@
+
+trigger: none
+
+pool:
+  name: 'wsl'
+
+variables:
+  - group: terra-auth
+  - name: terraformVersion
+    value: '1.6.6'
+  - name: workingDirectory
+    value: 'terraform'
+
+stages:
+- stage: TerraformSecurityCheck
+  displayName: 'Terraform Plan and Policy Check'
+  jobs:
+  - job: PolicyCheck
+    displayName: 'OPA Conftest Policy Enforcement'
+    steps:
+
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://github.com/open-policy-agent/conftest/releases/download/v0.45.0/conftest_0.45.0_Linux_x86_64.tar.gz
+        tar -xvf conftest_0.45.0_Linux_x86_64.tar.gz
+        sudo mv conftest /usr/local/bin/
+      displayName: 'Install Conftest'
+
+
+    - script: terraform init
+      workingDirectory: $(workingDirectory)
+      displayName: 'Terraform Init'
+
+    - script: terraform plan -out=tfplan
+      workingDirectory: $(workingDirectory)
+      displayName: 'Terraform Plan'
+
+    - script: terraform show -json tfplan > tfplan.json
+      workingDirectory: $(workingDirectory)
+      displayName: 'Convert plan to JSON'
+
+    - script: conftest test tfplan.json --policy ../policy
+      workingDirectory: $(workingDirectory)
+      displayName: 'Run Conftest Policy Check'
