@@ -1,0 +1,44 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: pod-compromise-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-compromise
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '30'
+            - name: CHAOS_INTERVAL
+              value: '10'
+            - name: TARGET_NAMESPACE
+              value: 'demo'
+            - name: APP_LABEL
+              value: 'app=nginx'
+            - name: PODS_AFFECTED_PERC
+              value: '50'
+            - name: FORCE
+              value: 'false'
+        probe:
+          - name: "check-deployment-status"
+            type: "k8sProbe"
+            mode: "SOT"
+            runProperties:
+              probeTimeout: 5
+              retry: 3
+              interval: 2
+            k8sProbe/inputs:
+              group: "apps"
+              version: "v1"
+              resource: "deployments"
+              namespace: "demo"
+              fieldSelector: "metadata.name=nginx"
+              operation: "present"
+

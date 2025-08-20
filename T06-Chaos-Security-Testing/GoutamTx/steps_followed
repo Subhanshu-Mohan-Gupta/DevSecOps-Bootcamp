@@ -1,0 +1,58 @@
+## Tools Used
+- **LitmusChaos**: Chaos engineering experiments
+- **Falco**: Runtime security monitoring
+- **Alertmanager**: Alert management and routing
+- **Prometheus**: Metrics collection and monitoring
+
+## Experiments Implemented
+1. **Token Revocation**: Simulates authentication token compromise
+2. **Network Blackhole**: Simulates network connectivity loss
+3. **Pod Compromise**: Simulates pod deletion/compromise
+
+
+
+
+Step 1:
+
+Initiated a k8s cluster
+Installed all the tools needed (helm,falco,Alertmanager,Prometheus)
+Installed LitmusChaos for security testing
+
+Step 2:
+Intsalled Falco wiht custom rules
+
+Step 3:
+created a demo nginx web app on which we will perform the tests.
+
+Step 4:
+Wrote 3 experiments which will be performed on our sample app.
+
+Step 5:
+Then wrote respective choas engines for each experiment.
+
+step 6:
+
+Apllied all the experiments and engines through kubectl.
+
+Step 7:
+monitored the logs through falco
+
+Step 8:
+port forwarded the alertmanager to view alerts on UI.
+
+Step 9:
+
+Created a post-mortem file which summarizes the reports of experiments performed.
+
+
+
+
+
+
+
+CHALLENGES_FACED:
+
+Using Litmus Chaos was one of the moajor challenge I faced as It was a very new thing to me, downloading it was creating some errors but when i reinitiated te setup it worked flawlessly.
+Another challenge was to understand the workflow properly that why we need engines to use experiment.
+Also got some error while deploying the engines ( was getting an error of something like resource pod not found, so when I had R&D on that I found that we need to create a service account of litmus admin(through k8s rbac) to use litmus chaos tool.)
+
