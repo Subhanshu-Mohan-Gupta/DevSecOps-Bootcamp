@@ -1,0 +1,28 @@
+{
+  "buildType": "https://slsa.dev/container/v1",
+  "builder": {"id": "https://github.com/gautamgoel789/sample_t13/.github/workflows/supply-chain.yml"},
+  "invocation": {
+    "configSource": {
+      "uri": "https://github.com/gautamgoel789/sample_t13",
+      "digest": {"sha1": "95eb0c107c3334d5e7349ed4669c47b28d1432c9"},
+      "entryPoint": ".github/workflows/supply-chain.yml"
+    },
+    "parameters": {
+      "image": "docker.io/gautam789/static-site:95eb0c107c3334d5e7349ed4669c47b28d1432c9"
+    },
+    "environment": {
+      "os": "ubuntu-latest",
+      "runner": "github-actions"
+    }
+  },
+  "metadata": {
+    "buildInvocationID": "17090860351",
+    "completeness": {"parameters": true, "environment": true, "materials": true}
+  },
+  "materials": [
+    {
+      "uri": "git+https://github.com/gautamgoel789/sample_t13",
+      "digest": {"sha1": "95eb0c107c3334d5e7349ed4669c47b28d1432c9"}
+    }
+  ]
+}
