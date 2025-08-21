@@ -1,0 +1,39 @@
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: token-revoke-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: token-revoke
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '60'
+            - name: CHAOS_INTERVAL
+              value: '10'
+            - name: TARGET_NAMESPACE
+              value: 'demo'
+            - name: APP_LABEL
+              value: 'app=nginx'
+        probe:
+          - name: "check-pod-status"
+            type: "cmdProbe"
+            mode: "SOT"
+            runProperties:
+              probeTimeout: 10
+              retry: 3
+              interval: 5
+            cmdProbe/inputs:
+              command: "kubectl get pods -l app=nginx -n demo --no-headers | wc -l"
+              comparator:
+                type: "int"
+                criteria: ">="
+                value: "1"
+

@@ -1,0 +1,17 @@
+falco:
+  grpc:
+    enabled: true
+  grpcOutput:
+    enabled: true
+
+falcosidekick:
+  enabled: true
+  config:
+    alertmanager:
+      hostport: "http://alertmanager:9093"
+      endpoint: "/api/v1/alerts"
+      minimumpriority: "warning"
+    webhook:
+      address: ""
+  webui:
+    enabled: true

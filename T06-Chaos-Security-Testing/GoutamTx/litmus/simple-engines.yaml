@@ -1,0 +1,57 @@
+---
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: token-revoke-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: token-revoke
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '30'
+---
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: network-blackhole-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: network-blackhole
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '30'
+---
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: pod-compromise-engine
+  namespace: demo
+spec:
+  appinfo:
+    appns: demo
+    applabel: "app=nginx"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-compromise
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: '30'
