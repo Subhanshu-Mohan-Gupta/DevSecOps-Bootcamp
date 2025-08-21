@@ -1,0 +1,24 @@
+The main goal of this project was to implement a secure software supply chain for container images by integrating signing,
+attestation, and verification into a CI/CD pipeline.
+
+Tools and technology used
+
+GitHub Actions – For CI/CD automation.
+Docker & Docker Hub – Containerization and image registry.
+Cosign (Sigstore project) – For signing and verifying container images.
+SLSA Provenance (Supply-chain Levels for Software Artifacts) – For generating and attaching build provenance.
+in-toto concepts – To capture build process evidence.
+jq & base64 – For verifying provenance outputs.
+
+
+Security Achievements
+
+Every Docker image is signed and can be verified before deployment.
+Provenance ensures traceability (which commit, workflow, and builder produced the artifact).
+Attestations prevent tampered or untrusted builds from being used in production.
+Artifacts are archived in GitHub Actions for compliance and auditing.
+
+
+Challenges Faced
+missing builder field error in provenance.json.
+Artifact download confusion due to GitHub permissions (404 error).

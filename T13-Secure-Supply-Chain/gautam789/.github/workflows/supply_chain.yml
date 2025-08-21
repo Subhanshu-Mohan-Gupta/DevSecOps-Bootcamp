@@ -1,0 +1,132 @@
+name: Supply Chain - Build, Sign, Attest, Verify
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+env:
+  IMAGE_NAME: static-site
+  REGISTRY: docker.io
+  REPO: ${{ secrets.DOCKERHUB_USERNAME }}/static-site
+  TAG: ${{ github.sha }}
+
+jobs:
+  build-sign-attest-verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build -t $REGISTRY/$REPO:$TAG .
+
+      - name: Push image
+        run: docker push $REGISTRY/$REPO:$TAG
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Recreate cosign.key from secret
+        run: |
+          echo "${{ secrets.COSIGN_PRIVATE_KEY_B64 }}" | base64 -d > cosign.key
+
+      - name: Sign image with Cosign
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cosign sign --yes --key cosign.key $REGISTRY/$REPO:$TAG
+
+      # --- Minimal SLSA/in-toto provenance predicate (example) ---
+      - name: Generate provenance predicate (SLSA-ish)
+        id: provenance
+        run: |
+          cat > provenance.json <<'JSON'
+          {
+            "buildType": "https://slsa.dev/container/v1",
+            "builder": {"id": "https://github.com/${{ github.repository }}/.github/workflows/supply-chain.yml"},
+            "invocation": {
+              "configSource": {
+                "uri": "https://github.com/${{ github.repository }}",
+                "digest": {"sha1": "${{ github.sha }}"},
+                "entryPoint": ".github/workflows/supply-chain.yml"
+              },
+              "parameters": {
+                "image": "${{ env.REGISTRY }}/${{ env.REPO }}:${{ env.TAG }}"
+              },
+              "environment": {
+                "os": "ubuntu-latest",
+                "runner": "github-actions"
+              }
+            },
+            "metadata": {
+              "buildInvocationID": "${{ github.run_id }}",
+              "completeness": {"parameters": true, "environment": true, "materials": true}
+            },
+            "materials": [
+              {
+                "uri": "git+https://github.com/${{ github.repository }}",
+                "digest": {"sha1": "${{ github.sha }}"}
+              }
+            ]
+          }
+          JSON
+
+      - name: Attach provenance attestation with Cosign
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cosign attest --yes \
+            --key cosign.key \
+            --predicate provenance.json \
+            --type slsaprovenance \
+            $REGISTRY/$REPO:$TAG
+
+      # --- CI Gate: verify right after publish ---
+      - name: Verify image signature
+        run: |
+          # Use committed cosign.pub if present, else fall back to secret
+          if [ -f cosign-keypair/cosign.pub ]; then
+            PUBKEY="cosign-keypair/cosign.pub"
+          else
+            echo "${{ secrets.COSIGN_PUBLIC_KEY }}" > cosign.pub
+            PUBKEY="cosign.pub"
+          fi
+
+          cosign verify --key $PUBKEY $REGISTRY/$REPO:$TAG
+
+      - name: Verify provenance attestation
+        run: |
+          if [ -f cosign-keypair/cosign.pub ]; then
+            PUBKEY="cosign-keypair/cosign.pub"
+          else
+            echo "${{ secrets.COSIGN_PUBLIC_KEY }}" > cosign.pub
+            PUBKEY="cosign.pub"
+          fi
+
+          # This prints a DSSE envelope; jq the payload to inspect provenance
+          cosign verify-attestation \
+            --key $PUBKEY \
+            --type slsaprovenance \
+            $REGISTRY/$REPO:$TAG \
+          | jq -r '.payload' | base64 -d | jq '.'
+
+      - name: Upload evidence artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-chain-evidence-${{ github.run_id }}
+          path: |
+            provenance.json
+
