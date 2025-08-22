@@ -1,0 +1,38 @@
+1. Source code
+  
+   write source code server.py.
+
+
+2. Setup Python Environment
+ 
+   Installed Python 3.11 on the GitHub Actions runner.
+   Upgraded pip, setuptools, and installed dependencies:
+    threatspec (for threat modeling)
+    plantuml (for diagram generation)
+    markdown-mermaid (for Mermaid diagrams)
+
+
+3.Prepare Output Folders
+  
+  Created threatmodel/ directory for JSON outputs.
+  Created diagrams/ directory for UML/Mermaid diagrams.
+
+
+4. Run ThreatSpec
+   
+   Scanned project source code for @threatspec annotations.
+   Generated threat libraries and saved JSON reports in threatmodel/.
+   Produced the main ThreatModel.md file (markdown report).
+   Exported a PlantUML file (diagrams/dfd.puml) for the data flow diagram (DFD).
+
+
+5. Generate Diagrams
+
+   Converted dfd.puml into a PNG diagram (dfd.png).
+   Created a Mermaid diagram (dfd.mmd) for visualizing flows.
+
+6. Problems faced
+    
+   while installing threatspec faced version issues for python.
+   Scanning server.py file from threatspec for building model.
+   fixed dependency issue.
