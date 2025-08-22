@@ -1,0 +1,12 @@
+flowchart LR
+    API["API"]
+    "#information_disclosure_to_api_with_sensitive_data_over_http"["Information Disclosure to API with Sensitive data over HTTP"]
+    "#information_disclosure"["Information Disclosure"]
+    "#sql_injection_to_database_with_unsanitized_input"["SQL Injection to Database with Unsanitized input"]
+    "#sql_injection"["SQL Injection"]
+
+    API -->|"exposes / accepts / mitigates"| "#information_disclosure_to_api_with_sensitive_data_over_http"
+    API -->|"exposes / accepts / mitigates"| "#information_disclosure"
+    API -->|"exposes / accepts / mitigates"| "#sql_injection_to_database_with_unsanitized_input"
+    API -->|"exposes / accepts / mitigates"| "#sql_injection"
+
