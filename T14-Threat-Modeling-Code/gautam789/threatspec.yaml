@@ -1,0 +1,8 @@
+project:
+  name: "T14 Threat Modeling as Code"
+  description: "Threat model generated from server.py annotations"
+
+paths:
+  - path: "app"
+    ignore: []
+
