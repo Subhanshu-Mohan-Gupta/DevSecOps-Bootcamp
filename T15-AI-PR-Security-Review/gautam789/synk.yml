@@ -1,0 +1,32 @@
+name: Snyk Code Analysis
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  snyk-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run Snyk Code test
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test --json-file-output=snyk-code.json
+
+      - name: Upload Snyk SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-code.json
+
