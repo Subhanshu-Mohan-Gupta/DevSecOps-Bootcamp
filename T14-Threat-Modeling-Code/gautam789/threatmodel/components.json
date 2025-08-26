@@ -1,0 +1,34 @@
+{
+  "components": {
+    "#user": {
+      "id": "#user",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "User",
+      "description": "",
+      "paths": [
+        []
+      ],
+      "custom": {}
+    },
+    "#api": {
+      "id": "#api",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "API",
+      "description": "",
+      "paths": [
+        []
+      ],
+      "custom": {}
+    },
+    "#database": {
+      "id": "#database",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "Database",
+      "description": "",
+      "paths": [
+        []
+      ],
+      "custom": {}
+    }
+  }
+}

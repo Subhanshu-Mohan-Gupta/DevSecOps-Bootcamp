@@ -1,0 +1,51 @@
+{
+  "mitigations": [
+    {
+      "control": "#use_https_instead_of_http",
+      "threat": "#information_disclosure",
+      "component": "#api",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@mitigate API against \"Information Disclosure\" with \"Use HTTPS instead of HTTP\"",
+        "code": "        # @mitigate API against \"Information Disclosure\" with \"Use HTTPS instead of HTTP\"\n        pass\n\nclass Database:\n    def connect(self):\n        pass\n",
+        "filename": "/home/gautam/DevSecOps-Bootcamp/T14-Threat-Modeling-Code/gautam789/app/server.py",
+        "line": 1
+      }
+    },
+    {
+      "control": "#use_parameterized_queries",
+      "threat": "#sql_injection",
+      "component": "#database",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@mitigate Database against \"SQL Injection\" with \"Use parameterized queries\"",
+        "code": "        # @mitigate Database against \"SQL Injection\" with \"Use parameterized queries\"\n        pass\n\n",
+        "filename": "/home/gautam/DevSecOps-Bootcamp/T14-Threat-Modeling-Code/gautam789/app/server.py",
+        "line": 1
+      }
+    }
+  ],
+  "exposures": [],
+  "transfers": [],
+  "acceptances": [
+    {
+      "threat": "#api",
+      "component": "#user",
+      "details": "\"GET request\"",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@accept API to User with \"GET request\"",
+        "code": "        # @accept API to User with \"GET request\"\n        return {\"data\": \"Hello World\"}\n\n    def send_data(self):\n        pass\n\n",
+        "filename": "/home/gautam/DevSecOps-Bootcamp/T14-Threat-Modeling-Code/gautam789/app/server.py",
+        "line": 1
+      }
+    }
+  ],
+  "connections": [],
+  "reviews": [],
+  "tests": [],
+  "run_id": "dca601fc88844728884ad815c0abd787"
+}

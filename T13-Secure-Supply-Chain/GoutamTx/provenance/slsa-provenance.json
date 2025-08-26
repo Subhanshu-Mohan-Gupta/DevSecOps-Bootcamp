@@ -1,0 +1,30 @@
+{
+    "_type": "https://in-toto.io/Statement/v0.1",
+    "subject": [
+      {
+        "name": "ghcr.io/goutamtx/task_demo/my-app",
+        "digest": {
+          "sha256": "sha256:5a44c635368bdce573bda15f286a53364895effe08a97ee9b9f2be326e10c73c" # Use the digest from build-and-push output
+        }
+      }
+    ],
+    "predicateType": "https://slsa.dev/provenance/v0.2",
+    "predicate": {
+      "builder": {
+        "id": "https://github.com/actions/runner"
+      },
+      "recipe": {
+        "type": "https://github.com/actions/runner",
+        "definedInMaterial": {},
+        "entryPoint": "ci.yml"
+      },
+      "materials": [
+        {
+          "uri": "git+https://github.com/GoutamTx/task_demo.git",
+          "digest": {
+            "sha1": "7644e30f4a8d0513be43777f6d834e132ee74fb0"
+          }
+        }
+      ]
+    }
+  }

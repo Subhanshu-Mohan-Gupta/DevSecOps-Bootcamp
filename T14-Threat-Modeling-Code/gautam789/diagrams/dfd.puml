@@ -1,0 +1,13 @@
+@startuml
+skinparam shadowing false
+skinparam defaultTextAlignment left
+
+'class definitions
+class API as "API"
+class Database as "Database"
+
+'connections
+API --> Database : "Reads/Writes Data"
+
+@enduml
+

@@ -1,0 +1,141 @@
+name: Secure Supply Chain CI
+
+on:
+  push:
+    branches:
+      - master # Changed to 'master' as per your provided workflow snippet
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+env:
+  # Initial definition, will be normalized to lowercase in a step
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/my-app
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-sign:
+    runs-on: ubuntu-latest
+    outputs: # Declare outputs for this job
+      IMAGE_DIGEST: ${{ steps.build-and-push.outputs.digest }} # Export the image digest directly from build-push-action
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Normalize IMAGE_NAME to lowercase for GHCR
+        run: |
+          # Convert the repository part of IMAGE_NAME to lowercase
+          # and update the IMAGE_NAME environment variable for subsequent steps.
+          LOWER_REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=ghcr.io/$LOWER_REPO_NAME/my-app" >> $GITHUB_ENV
+        # This step must run before 'Build and push container image' to ensure IMAGE_NAME is lowercase.
+
+      - name: Build and push container image
+        id: build-and-push # Keep this ID to reference its outputs
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # Use the updated IMAGE_NAME from the GITHUB_ENV
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.2.0
+
+      - name: Sign container image
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        run: |
+          echo "$COSIGN_PRIVATE_KEY" > cosign.key
+          # Use the digest from the 'build-and-push' step's outputs
+          cosign sign --yes --key cosign.key ${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+
+      - name: Generate SLSA provenance attestation
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        run: |
+          echo "$COSIGN_PRIVATE_KEY" > cosign.key
+          
+          # Create a basic SLSA predicate file dynamically
+          cat << EOF > slsa-provenance.json
+          {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+              {
+                "name": "${{ env.IMAGE_NAME }}",
+                "digest": {
+                  "sha256": "${{ steps.build-and-push.outputs.digest }}" # Use the digest from build-and-push output
+                }
+              }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v0.2",
+            "predicate": {
+              "builder": {
+                "id": "https://github.com/actions/runner"
+              },
+              "recipe": {
+                "type": "https://github.com/actions/runner",
+                "definedInMaterial": {},
+                "entryPoint": "ci.yml"
+              },
+              "materials": [
+                {
+                  "uri": "git+https://github.com/${{ github.repository }}.git",
+                  "digest": {
+                    "sha1": "${{ github.sha }}"
+                  }
+                }
+              ]
+            }
+          }
+          EOF
+          
+          cosign attest --yes --predicate slsa-provenance.json --key cosign.key ${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-sign # Ensure this job runs after build-and-sign
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.2.0
+
+      - name: Normalize IMAGE_NAME to lowercase for GHCR (Verification Job)
+        run: |
+          # Convert the repository part of IMAGE_NAME to lowercase
+          # and update the IMAGE_NAME environment variable for subsequent steps.
+          LOWER_REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=ghcr.io/$LOWER_REPO_NAME/my-app" >> $GITHUB_ENV
+        # This step must run before verification commands.
+
+      - name: Verify image and attestation
+        env:
+          COSIGN_PUBLIC_KEY: ${{ secrets.COSIGN_PUBLIC_KEY }} # Use a secret for the public key
+          # Access the output from the previous job using needs.<job_id>.outputs.<output_name>
+          IMAGE_DIGEST: ${{ needs.build-and-sign.outputs.IMAGE_DIGEST }}
+          # IMAGE_NAME is now updated via GITHUB_ENV in the previous step
+        run: |
+          # Write the public key from the secret to a file
+          echo "$COSIGN_PUBLIC_KEY" > cosign.pub
+          
+          # Verify the image signature using the passed digest
+          cosign verify --key cosign.pub "${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}"
+          
+          # Verify the provenance attestation using the passed digest
+          cosign verify-attestation --key cosign.pub "${{ env.IMAGE_NAME }}@${{ env.IMAGE_DIGEST }}"
+          
+          echo "Verification successful. Image is trusted for deployment."
+
