@@ -1,0 +1,50 @@
+name: Threat Modeling CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  threat-model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'   # ThreatSpec works fine with 3.11 (stable)
+
+      - name: 📦 Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz default-jre
+          python -m pip install --upgrade pip setuptools wheel
+          pip install threatspec
+
+      - name: 🛡 Run ThreatSpec
+        run: |
+          threatspec run
+          threatspec report   # generates ThreatModel.md + ThreatModel.md.png
+
+      - name: 📝 Generate Mermaid DFD
+        run: |
+          python3 scripts/generate_mermaid.py || echo "Mermaid generation skipped"
+
+      - name: 📝 Generate PlantUML DFD
+        run: |
+          python3 scripts/generate_puml.py || echo "PlantUML generation skipped"
+
+      - name: 📤 Upload threat model artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: threat-model-artifacts
+          path: |
+            ThreatModel.md
+            ThreatModel.md.png
+            diagrams/*.mmd
+            diagrams/*.puml
+

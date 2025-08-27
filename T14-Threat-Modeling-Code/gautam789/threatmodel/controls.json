@@ -1,0 +1,18 @@
+{
+  "controls": {
+    "#use_https_instead_of_http": {
+      "id": "#use_https_instead_of_http",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"Use HTTPS instead of HTTP\"",
+      "description": "",
+      "custom": {}
+    },
+    "#use_parameterized_queries": {
+      "id": "#use_parameterized_queries",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"Use parameterized queries\"",
+      "description": "",
+      "custom": {}
+    }
+  }
+}

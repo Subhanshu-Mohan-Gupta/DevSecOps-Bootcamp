@@ -1,0 +1,39 @@
+{
+  "threats": {
+    "#api": {
+      "id": "#api",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "API",
+      "description": "",
+      "custom": {}
+    },
+    "#information_disclosure_to_api_with_sensitive_data_over_http": {
+      "id": "#information_disclosure_to_api_with_sensitive_data_over_http",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"Information Disclosure\" to API with \"Sensitive data over HTTP\"",
+      "description": "",
+      "custom": {}
+    },
+    "#information_disclosure": {
+      "id": "#information_disclosure",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"Information Disclosure\"",
+      "description": "",
+      "custom": {}
+    },
+    "#sql_injection_to_database_with_unsanitized_input": {
+      "id": "#sql_injection_to_database_with_unsanitized_input",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"SQL Injection\" to Database with \"Unsanitized input\"",
+      "description": "",
+      "custom": {}
+    },
+    "#sql_injection": {
+      "id": "#sql_injection",
+      "run_id": "dca601fc88844728884ad815c0abd787",
+      "name": "\"SQL Injection\"",
+      "description": "",
+      "custom": {}
+    }
+  }
+}
