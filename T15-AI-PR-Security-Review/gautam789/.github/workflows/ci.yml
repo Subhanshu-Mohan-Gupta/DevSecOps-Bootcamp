@@ -1,0 +1,61 @@
+
+name: Snyk Code Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  snyk-code:
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write   # for SARIF upload
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Run Snyk Code Test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk code test --sarif > snyk-code.json || true
+
+      - name: Show SARIF first lines (debug)
+        run: head -20 snyk-code.json
+
+      - name: Count vulnerabilities by severity
+        id: counts
+        run: |
+          HIGH=$(jq '[.runs[0].results[]? | select(.level=="error")]   | length' snyk-code.json)
+          MEDIUM=$(jq '[.runs[0].results[]? | select(.level=="warning")] | length' snyk-code.json)
+          LOW=$(jq '[.runs[0].results[]? | select(.level=="note")]    | length' snyk-code.json)
+          
+          echo "high=$HIGH" >> $GITHUB_OUTPUT
+          echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+          echo "low=$LOW" >> $GITHUB_OUTPUT
+
+      - name: Add summary to GitHub Actions UI
+        run: |
+          echo "### 🔒 Snyk Code Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| High     | ${{ steps.counts.outputs.high }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Medium   | ${{ steps.counts.outputs.medium }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Low      | ${{ steps.counts.outputs.low }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload SARIF results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk-code.json
+

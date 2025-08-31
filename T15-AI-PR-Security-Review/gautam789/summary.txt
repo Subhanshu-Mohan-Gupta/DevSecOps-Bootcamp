@@ -1,0 +1,31 @@
+Get source code.
+
+Install Snyk CLI locally:
+   npm install -g snyk
+
+ Get your Snyk API Token:
+   - Log in to https://app.snyk.io
+   - Go to Account Settings → API Token
+   - Copy token
+
+
+Add Snyk token to GitHub Secrets:
+   - Go to your repository
+   - Name: SNYK_TOKEN   
+
+Create workflow file:
+   - Create directory: .github/workflows
+   - Create file: snyk-code.yml
+
+
+Get result.json for synk code results.
+
+Get the screen shots for the outputs.
+
+
+
+Problems faced
+Initially false positives were ignored by synk code.So from the web i turn on synk code option for my org.
+
+   
+   
