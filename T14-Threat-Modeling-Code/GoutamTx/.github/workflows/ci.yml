@@ -1,0 +1,75 @@
+name: Threat Modeling CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  checks: write
+
+jobs:
+  threatmodel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz plantuml default-jre
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run ThreatSpec (generate threatmodel JSON + markdown + PNG)
+        run: |
+          # run ThreatSpec over src/ and top-level .threatspec files
+          threatspec run
+          threatspec report
+
+      - name: Generate DFD diagrams (PlantUML + Mermaid)
+        run: |
+          python scripts/gen_diagrams.py
+          # optionally render PlantUML to PNG on runner
+          if [ -f diagrams/dfd.puml ]; then
+            plantuml -tpng -o diagrams diagrams/dfd.puml || true
+          fi
+
+      - name: Fail on new unmitigated critical threats
+        id: gate
+        run: |
+          python scripts/check_new_critical_threats.py
+
+      - name: Upload artifacts (reports, json, diagrams)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: threatmodel-artifacts
+          path: |
+            threatmodel/**
+            ThreatModel.md
+            ThreatModel.md.png
+            diagrams/**
+
+      - name: Commit generated artifacts back to main (only main branch)
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          git config user.name "threatmodel-bot"
+          git config user.email "bot@example.com"
+          git add ThreatModel.md ThreatModel.md.png diagrams/ threatmodel/threatmodel.json || true
+          git commit -m "ci: update threat model and diagrams [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:main || echo "Push failed (likely no permission)"

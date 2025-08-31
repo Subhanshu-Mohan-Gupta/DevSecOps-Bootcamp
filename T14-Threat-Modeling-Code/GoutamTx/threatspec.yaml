@@ -1,0 +1,7 @@
+project:
+  name: "T14 - Threat Modeling as Code"
+  description: "ThreatSpec project for CI-driven Threat Modeling"
+paths:
+  - "./src"
+  - "./"
+

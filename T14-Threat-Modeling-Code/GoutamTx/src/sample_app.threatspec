@@ -1,0 +1,13 @@
+# Standalone annotations (alternate to inline annotations)
+
+@component SampleApp:Queue
+@connects SampleApp:API to SampleApp:Queue with AsyncMessage
+
+@threat Sensitive Data Exposure (#data_exposure)
+@control TLS1.2+ (#tls12)
+@mitigates SampleApp:Web against Sensitive Data Exposure with TLS1.2+
+@severity medium
+
+# Accept a known non-critical XSS in dev-only banner
+@accepts #xss to SampleApp:Web with "accepted: dev banner low impact"
+
