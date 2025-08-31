@@ -7,19 +7,25 @@ Everything you need is here: task folders, trackers, CI/CD guard-rails, **data-d
 
 ## 📚 Quick-Glance Tracker
 
-| ID  | Folder                               | Theme (🔑 focus)                   | Difficulty
-|-----|--------------------------------------|-------------------------------------|-----------
-| T01 | `T01-Enforce-IaC-Policies`           | Terraform + OPA / Sentinel          | ⚙️⚙️⚙️⚙️
-| T02 | `T02-K8s-Runtime-Threat-Detection`   | Falco / Tracee, eBPF                | ⚙️⚙️⚙️⚙️
-| T03 | `T03-Secrets-Management-Rotation`    | Vault, CSI driver, rotation scripts | ⚙️⚙️⚙️⚙️
-| T04 | `T04-Compliance-Audit-CICD`          | Semgrep, Trivy, Docker Bench        | ⚙️⚙️⚙️⚙️
-| T06 | `T06-Chaos-Security-Testing`         | Chaos Toolkit / LitmusChaos         | ⚙️⚙️⚙️⚙️⚙️
-| T13 | `T13-Secure-Supply-Chain`            | SLSA, Cosign, in-toto               | ⚙️⚙️⚙️⚙️
-| T14 | `T14-Threat-Modeling-Code`           | ThreatSpec, PlantUML                | ⚙️⚙️⚙️
-| T15 | `T15-AI-PR-Security-Review`          | DeepCode / Snyk Code                | ⚙️⚙️⚙️⚙️
-| T16 | `T16-Cloud-Honeypot`                 | DVWA + Falco + ELK                  | ⚙️⚙️⚙️⚙️⚙️
-| T17 | `T17-CVE-Triage-Automation`          | SBOM + Grype + Jira                 | ⚙️⚙️⚙️⚙️
-| T18 | `T18-Kubernetes-Policy-Enforcement`  | Kyverno Policy-as-Code              | ⚙️⚙️⚙️⚙️
+| ID  | Folder                               | Theme (🔑 focus)                             | Difficulty
+|-----|--------------------------------------|----------------------------------------------|-----------
+| T01 | `T01-Enforce-IaC-Policies`           | Terraform + OPA / Sentinel                   | ⚙️⚙️⚙️⚙️
+| T02 | `T02-K8s-Runtime-Threat-Detection`   | Falco / Tracee, eBPF                         | ⚙️⚙️⚙️⚙️
+| T03 | `T03-Secrets-Management-Rotation`    | Vault, CSI driver, rotation scripts          | ⚙️⚙️⚙️⚙️
+| T04 | `T04-Compliance-Audit-CICD`          | Semgrep, Trivy, Docker Bench                 | ⚙️⚙️⚙️⚙️
+| T06 | `T06-Chaos-Security-Testing`         | Chaos Toolkit / LitmusChaos                  | ⚙️⚙️⚙️⚙️⚙️
+| T13 | `T13-Secure-Supply-Chain`            | SLSA, Cosign, in-toto                        | ⚙️⚙️⚙️⚙️
+| T14 | `T14-Threat-Modeling-Code`           | ThreatSpec, PlantUML                         | ⚙️⚙️⚙️
+| T15 | `T15-AI-PR-Security-Review`          | DeepCode / Snyk Code                         | ⚙️⚙️⚙️⚙️
+| T16 | `T16-Cloud-Honeypot`                 | DVWA + Falco + ELK                           | ⚙️⚙️⚙️⚙️⚙️
+| T17 | `T17-CVE-Triage-Automation`          | SBOM + Grype + Jira                          | ⚙️⚙️⚙️⚙️
+| T18 | `T18-Kubernetes-Policy-Enforcement`  | Kyverno Policy-as-Code                       | ⚙️⚙️⚙️⚙️
+| T19 | `T19-ZeroTrust-GHA`                  | Zero-Trust GitHub Actions (OIDC federation)  | ⚙️⚙️⚙️⚙️
+| T20 | `T20-eBPF-Runtime-Detection`         | Runtime exploit detection with eBPF          | ⚙️⚙️⚙️⚙️⚙️
+| T21 | `T21-Secrets-Canarying`              | Honeytokens & secrets exfiltration detection | ⚙️⚙️⚙️⚙️
+| T22 | `T22-Red-vs-Blue-Pipeline`           | Red-team vs Blue-team CI/CD defense          | ⚙️⚙️⚙️⚙️⚙️
+| T23 | `T23-MultiCloud-Policy-Drift`        | Cross-cloud IAM policy drift guard           | ⚙️⚙️⚙️⚙️
+| T24 | `T24-AI-Log-Correlation`             | AI-driven log correlation & threat hunting   | ⚙️⚙️⚙️⚙️⚙️
 
 ---
 

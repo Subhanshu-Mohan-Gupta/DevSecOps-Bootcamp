@@ -45,6 +45,12 @@ A standardized guide for mentors evaluating trainee submissions in the **DevSecO
 | **T16 – Cloud Honeypot** | • Honeypot isolated (network & creds)<br>• Logs shipped to ELK/Loki<br>• Insights fed back into detection rules | | |
 | **T17 – CVE Triage Automation** | • SBOM generated with Syft<br>• Grype scan + VEX filtering<br>• Jira tickets auto-created/closed accurately | | |
 | **T18 – Kubernetes Policy-as-Code** | • Kyverno policies cover privilege, FS, labels<br>• Non-compliant workloads blocked<br>• Validation reports stored as artifacts | | |
+| **T19 – Zero-Trust GitHub Actions** | • OIDC federation configured correctly with AWS IAM<br>• No static secrets present in workflows<br>• Pipeline deploys using only OIDC tokens<br>• Reintroduction of secrets blocked | | |
+| **T20 – Runtime Exploit Detection (eBPF)** | • eBPF/Tracee program captures suspicious syscalls<br>• Deployed as DaemonSet<br>• Exploit attempt simulated & detected<br>• Logs exported centrally (ELK/Loki) | | |
+| **T21 – Secrets Canarying & Exfil Detection** | • Honeytokens generated & deployed<br>• CloudTrail or equivalent alerts trigger on use<br>• Pipeline documented end-to-end<br>• Alerts distinguishable from real secrets | | |
+| **T22 – Red vs Blue Chaos Pipeline** | • Red workflow simulates tampering<br>• Blue workflow detects & blocks tampering<br>• Sigstore/Cosign attestations created<br>• Attack vs defense outcomes documented | | |
+| **T23 – Multi-Cloud Policy Drift Guard** | • AWS/GCP IAM policies exported<br>• Conftest/OPA detects drift<br>• Baseline rules defined clearly<br>• Remediation guidance provided | | |
+| **T24 – AI Log Correlation & Threat Hunting** | • Falco, CloudTrail, Nginx logs aggregated<br>• Analyzer detects anomalies<br>• AI used responsibly for correlation<br>• Actionable reports validated | | |
 
 ---
 

@@ -1,0 +1,14 @@
+task_id: T21
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "scripts/generate_honeytoken.py"
+  - "cloudtrail/*.yaml"
+required_concepts:
+  - "honeytoken"
+  - "aws"
+  - "cloudtrail"
+  - "alert"
+  - "secrets exfiltration"
+allowed_extensions: [ .py, .yaml, .yml, .json, .md, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

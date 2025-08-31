@@ -1,0 +1,19 @@
+name: Task T21 CI
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+      - "cloudtrail/**"
+      - ".github/workflows/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run honeytoken script
+        run: |
+          python scripts/generate_honeytoken.py > token.json || exit 1
+          jq . token.json

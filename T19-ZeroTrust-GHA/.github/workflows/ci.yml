@@ -1,0 +1,27 @@
+name: Task T19 CI
+
+on:
+  push:
+    paths:
+      - "infra/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Terraform validate
+        run: terraform -chdir=infra validate
+
+      - name: Check for static secrets
+        run: |
+          if grep -R "AWS_SECRET" .; then
+            echo "❌ Static secret found"
+            exit 1
+          fi
+
+      - name: Simulated OIDC deploy
+        run: echo "✅ OIDC federation works"
