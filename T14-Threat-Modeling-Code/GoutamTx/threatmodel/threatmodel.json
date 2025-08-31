@@ -1,0 +1,94 @@
+{
+  "mitigations": [
+    {
+      "control": "#parameterized_queries",
+      "threat": "#sql_injection",
+      "component": "#sampleapp_api",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@mitigates SampleApp:API against SQL Injection with Parameterized Queries",
+        "code": "# @mitigates SampleApp:API against SQL Injection with Parameterized Queries\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n  impact: critical\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    },
+    {
+      "control": "#parameterized_queries",
+      "threat": "#sql_injection",
+      "component": "#sampleapp_api",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@mitigates SampleApp:API against SQL Injection with Parameterized Queries",
+        "code": "# @mitigates SampleApp:API against SQL Injection with Parameterized Queries\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n  impact: critical\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    }
+  ],
+  "exposures": [],
+  "transfers": [],
+  "acceptances": [],
+  "connections": [
+    {
+      "source_component": "#sampleapp_web",
+      "destination_component": "#sampleapp_api",
+      "direction": "to",
+      "details": "HTTPS",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@connects SampleApp:Web to SampleApp:API with HTTPS",
+        "code": "# @connects SampleApp:Web to SampleApp:API with HTTPS\n\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    },
+    {
+      "source_component": "#sampleapp_api",
+      "destination_component": "#sampleapp_db",
+      "direction": "to",
+      "details": "SQL",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@connects SampleApp:API to SampleApp:DB with SQL",
+        "code": "# @connects SampleApp:API to SampleApp:DB with SQL\n\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    },
+    {
+      "source_component": "#sampleapp_web",
+      "destination_component": "#sampleapp_api",
+      "direction": "to",
+      "details": "HTTPS",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@connects SampleApp:Web to SampleApp:API with HTTPS",
+        "code": "# @connects SampleApp:Web to SampleApp:API with HTTPS\n\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    },
+    {
+      "source_component": "#sampleapp_api",
+      "destination_component": "#sampleapp_db",
+      "direction": "to",
+      "details": "SQL",
+      "description": "",
+      "custom": {},
+      "source": {
+        "annotation": "@connects SampleApp:API to SampleApp:DB with SQL",
+        "code": "# @connects SampleApp:API to SampleApp:DB with SQL\n\n\n\"\"\"\n@exposes SampleApp:API to Authentication Bypass (#auth_bypass):\n  description: Missing JWT validation on admin endpoints\n",
+        "filename": "/home/runner/work/T14_demo/T14_demo/src/sample_app.py",
+        "line": 1
+      }
+    }
+  ],
+  "reviews": [],
+  "tests": [],
+  "run_id": "de226a77d7ca4ba4a4acd381c63e102d"
+}
