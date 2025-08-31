@@ -1,0 +1,14 @@
+task_id: T22
+required_files:
+  - "README.md"
+  - ".github/workflows/red.yml"
+  - ".github/workflows/blue.yml"
+  - "attestations/*.json"
+required_concepts:
+  - "red team"
+  - "blue team"
+  - "tamper"
+  - "sigstore"
+  - "supply chain"
+allowed_extensions: [ .yaml, .yml, .json, .md, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

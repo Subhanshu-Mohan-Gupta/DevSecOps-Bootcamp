@@ -1,0 +1,15 @@
+task_id: T23
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "aws_policies/*.json"
+  - "gcp_policies/*.json"
+  - "baseline/**/*.yaml"
+required_concepts:
+  - "policy drift"
+  - "aws iam"
+  - "gcp iam"
+  - "opa"
+  - "conftest"
+allowed_extensions: [ .json, .yaml, .yml, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

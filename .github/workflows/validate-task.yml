@@ -17,7 +17,6 @@ jobs:
       - name: List modified task folders
         id: set
         run: |
-          # Get unique top-level task directories (e.g., T13-Secure-Supply-Chain)
           CHANGED=$(git diff --name-only origin/main...HEAD \
                      | grep -oE '^T[0-9]{2}[^/]+' \
                      | sort -u \

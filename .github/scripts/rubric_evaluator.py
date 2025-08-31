@@ -120,7 +120,7 @@ def build_json_prompt(rubric: str, diff_chunk: str, task_id: str, evidence: Dict
 
     Rules:
     - 'scores' values must be integers 1..4 (omit key if truly N/A).
-    - 'task_specific_total' is 0..20 (whole number). Do NOT exceed 20.
+    - 'task_specific_total' is 0..20 (whole number). Do NOT exceed 20 unless overridden.
     - Do not include extra keys.
     - Base your scoring ONLY on the rubric and the EVIDENCE + DIFF given.
 
@@ -206,9 +206,13 @@ def aggregate_results(chunks: List[Dict[str, Any]]) -> Dict[str, Any]:
     overall = sum(agg_scores.values()) + task_total_max
     return {"scores": agg_scores, "task_specific_total": task_total_max, "overall_total": overall, "notes": agg_notes}
 
-def render_markdown(task_id: str, agg: Dict[str, Any], model_used: str, evidence: Dict[str, Any]) -> str:
+def render_markdown(task_id: str, agg: Dict[str, Any], model_used: str, evidence: Dict[str, Any], task_max: int) -> str:
     s = agg["scores"]; task_total = agg["task_specific_total"]; overall = agg["overall_total"]
     notes = agg["notes"]
+
+    general_max = len(GENERAL_KEYS) * 4
+    denom       = general_max + task_max
+
     table = [
         f"_Model used: **{model_used}**_",
         "",
@@ -220,13 +224,13 @@ def render_markdown(task_id: str, agg: Dict[str, Any], model_used: str, evidence
         f"| Documentation | {s['documentation']} |",
         f"| Presentation | {s['presentation']} |",
         "",
-        "| **Task-Specific** | **Score (0-20)** |",
+        f"| **Task-Specific** | **Score (0-{task_max})** |",
         "|---|---|",
         f"| {task_id} | {task_total} |",
         "",
         "| **Overall Evaluation** | **Value** |",
         "|---|---|",
-        f"| Total Score (General + Task-Specific) | {overall} / 40 |",
+        f"| Total Score (General + Task-Specific) | {overall} / {denom} |",
         "",
         "#### Evidence considered",
         f"- Required files present: {len(evidence.get('present_files', []))} | missing: {len(evidence.get('missing_files', []))}",
@@ -248,6 +252,7 @@ def main() -> None:
         allowed = set(exp.get("allowed_extensions") or [".tf",".hcl",".rego",".yaml",".yml",".json",".md",".py",".sh",".Dockerfile","Dockerfile",".tpl"])
         req_files = exp.get("required_files") or []
         req_concepts = [c.lower() for c in (exp.get("required_concepts") or [])]
+        task_max = exp.get("task_max_score", 20)  # NEW: per-task max from expectations
 
         rubric_text = load_rubric(exp.get("rubric_path")) if exp.get("rubric_path") else rubric_default_text
         rubric_len  = len(rubric_text)
@@ -298,7 +303,7 @@ def main() -> None:
             chunk_results.append(res)
 
         agg = aggregate_results(chunk_results)
-        md  = render_markdown(task_id, agg, MODEL, evidence)
+        md  = render_markdown(task_id, agg, MODEL, evidence, task_max)
         md  = strip_overall_eval_date_row(md)
 
         header = f"### 📝 AI Rubric Evaluation for **{folder}** (Consolidated)\n\n"

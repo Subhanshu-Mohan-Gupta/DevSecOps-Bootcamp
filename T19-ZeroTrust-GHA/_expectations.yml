@@ -1,0 +1,14 @@
+task_id: T19
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "infra/**/*.tf"
+  - "scripts/configure_oidc.sh"
+required_concepts:
+  - "oidc"
+  - "federation"
+  - "iam role"
+  - "github actions"
+  - "aws"
+allowed_extensions: [ .tf, .yaml, .yml, .json, .md, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

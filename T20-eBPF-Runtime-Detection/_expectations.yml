@@ -1,0 +1,15 @@
+task_id: T20
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "ebpf/**/*.c"
+  - "ebpf/**/*.py"
+  - "k8s/*.yaml"
+required_concepts:
+  - "ebpf"
+  - "tracee"
+  - "bcc"
+  - "syscall"
+  - "daemonset"
+allowed_extensions: [ .c, .py, .yaml, .yml, .json, .md, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

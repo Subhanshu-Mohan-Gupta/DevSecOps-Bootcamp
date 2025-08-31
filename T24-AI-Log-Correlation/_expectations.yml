@@ -1,0 +1,16 @@
+task_id: T24
+required_files:
+  - "README.md"
+  - ".github/workflows/ci.yml"
+  - "logs/falco/*.json"
+  - "logs/cloudtrail/*.json"
+  - "scripts/analyze_logs.py"
+required_concepts:
+  - "elk"
+  - "log correlation"
+  - "falco"
+  - "cloudtrail"
+  - "nginx"
+  - "threat hunting"
+allowed_extensions: [ .json, .yaml, .yml, .md, .py, .sh ]
+rubric_path: "../../shared/templates/rubric.md"

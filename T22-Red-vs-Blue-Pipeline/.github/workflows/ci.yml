@@ -1,0 +1,21 @@
+name: Task T22 CI
+
+on:
+  push:
+    paths:
+      - ".github/workflows/red.yml"
+      - ".github/workflows/blue.yml"
+      - "attestations/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check attestation files
+        run: |
+          if ! ls attestations/*.json >/dev/null 2>&1; then
+            echo "❌ No attestation files found"
+            exit 1
+          fi
