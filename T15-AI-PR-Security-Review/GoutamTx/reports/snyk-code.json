@@ -1,0 +1,27 @@
+{
+  "ok": false,
+  "issues": [
+    {
+      "id": "PY-EVAL-INJECTION",
+      "title": "Use of `eval()` with untrusted input",
+      "severity": "high",
+      "file": "app/utils.py",
+      "line": 4,
+      "message": "The function `dangerous_eval` calls `eval()` directly on user-controlled input. This allows arbitrary code execution."
+    },
+    {
+      "id": "PY-FORMAT-STRING-XSS",
+      "title": "Unescaped format string in HTTP response",
+      "severity": "medium",
+      "file": "app/app.py",
+      "line": 9,
+      "message": "User input (`request.args.get('name')`) is returned directly in the HTTP response. This may enable cross-site scripting (XSS)."
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "high": 1,
+    "medium": 1,
+    "low": 0
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "total_issues": 2,
+  "high": 1,
+  "medium": 1,
+  "low": 0,
+  "critical": 0,
+  "files_scanned": [
+    "app/app.py",
+    "app/utils.py"
+  ],
+  "timestamp": "2025-09-02T10:45:00Z"
+}

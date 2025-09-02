@@ -1,0 +1,29 @@
+This project demonstrates integrating Snyk Code with GitHub Actions to automatically scan application code for vulnerabilities and enforce severity gates.
+
+Snyk is a developer-first security platform that helps find, fix, and monitor vulnerabilities in:
+
+Application code (Snyk Code – static analysis)
+
+Open source dependencies (Snyk Open Source)
+
+Containers & images (Snyk Container)
+
+Infrastructure as Code (IaC) (Terraform, Kubernetes, etc.)
+
+It integrates directly into your CI/CD pipelines, IDEs, and GitHub/GitLab to continuously scan and provide actionable security insights.
+
+Steps followed :-
+
+1. Created a python project with known vulnerabilites that will be pointed by snyk.
+
+2. installed snyk and run snyk test on our app code.
+
+3. created a folder named reports where the outcome will be stored.
+
+4. created the artifact and uploaded it to the repo.
+
+5. Also worte some scripts which summarizes the report and enforce severity gates.
+
+6. Created a github action workflow to automate the whole setup
+
+7. For testing we created a pr and it automatically ran the workflow and pass all the checks before it can be merged.

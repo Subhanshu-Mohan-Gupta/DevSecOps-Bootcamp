@@ -1,0 +1,2 @@
+# Simple toggles for metrics behavior
+trend_window: 365 # days to retain in trend.csv (enforced by summarize script)
