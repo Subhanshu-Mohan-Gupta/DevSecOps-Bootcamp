@@ -1,0 +1,93 @@
+name: Vulnerability Scan and Jira Automation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    env:
+      JIRA_URL: "https://testingxperts-team-wcpnfi53.atlassian.net"
+      JIRA_EMAIL: "d14296388@gmail.com"
+      JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      PROJECT_KEY: "SEC"
+      DONE_TRANSITION_ID: "31"
+
+    steps:
+      # -----------------------------
+      # Step 1: Checkout Code
+      # -----------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # -----------------------------
+      # Step 2: Install Python & Dependencies
+      # -----------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      # -----------------------------
+      # Step 3: Install Syft & Grype
+      # -----------------------------
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          syft version
+
+      - name: Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          grype version
+
+      # -----------------------------
+      # Step 4: Generate SBOM
+      # -----------------------------
+      - name: Generate SBOM
+        run: |
+          syft dir:. -o json > sbom.json
+          echo "[INFO] SBOM generated at sbom.json"
+
+      # -----------------------------
+      # Step 5: Run Grype Scan
+      # -----------------------------
+      - name: Run Grype Vulnerability Scan
+        run: |
+          grype sbom:sbom.json -o json > grype-report.json
+          echo "[INFO] Grype scan completed and saved to grype-report.json"
+
+      # -----------------------------
+      # Step 6: Upload Reports as Artifacts
+      # -----------------------------
+      - name: Upload scan reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            sbom.json
+            grype-report.json
+
+      # -----------------------------
+      # Step 7: Run Python Script to Create Jira Issues
+      # -----------------------------
+      - name: Run Python script for Jira issue creation
+        run: |
+          python scripts/process_vulns.py --sbom sbom.json --grype grype-report.json --min-severity medium
+
+      # -----------------------------
+      # Step 8: Run Python Script to Close Fixed Issues
+      # -----------------------------
+      - name: Close fixed Jira issues
+        run: |
+          python scripts/close_issues.py
