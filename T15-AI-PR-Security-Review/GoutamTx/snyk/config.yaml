@@ -1,0 +1,23 @@
+# Snyk Code Configuration
+version: v1.0.0
+settings:
+  severity-threshold: high
+  fail-on: 
+    - high
+    - critical
+  exclude:
+    - "test/**"
+    - "tests/**"
+    - "*.test.js"
+    - "*.spec.py"
+  include:
+    - "src/**"
+    - "app/**"
+    - "lib/**"
+reporting:
+  format: sarif
+  output: snyk-results.sarif
+metrics:
+  track-false-positives: true
+  log-findings: true
+

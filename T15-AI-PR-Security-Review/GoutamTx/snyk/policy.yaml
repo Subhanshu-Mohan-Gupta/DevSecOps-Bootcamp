@@ -1,0 +1,23 @@
+# Security Policy Configuration
+rules:
+  - id: "javascript/hardcoded-secrets"
+    severity: critical
+    action: block
+    
+  - id: "python/sql-injection"
+    severity: high
+    action: block
+    
+  - id: "generic/weak-crypto"
+    severity: high
+    action: block
+    
+  - id: "javascript/xss"
+    severity: medium
+    action: warn
+    
+false-positive-tracking:
+  enabled: true
+  auto-dismiss: false
+  review-required: true
+
