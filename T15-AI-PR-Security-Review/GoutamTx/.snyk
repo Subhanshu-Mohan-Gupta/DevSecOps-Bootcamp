@@ -1,20 +1,10 @@
-version: v1.27.0
-ignore: 
-ignore:
-  "python:dangerous-eval":
-    - "*":
-        reason: "Intentionally insecure for demo"
-        expires: 2025-12-31T23:59:59Z
-  "python:eval-injection":
-    - "*":
-        reason: "Intentionally insecure endpoint for testing Snyk Code scan"
-        expires: 2025-12-31T23:59:59Z
-# Populate via PR review (false positives) or manual entries.
-# Each key is the Snyk Code issue id, e.g. code-security/SNYK-CODE-1234
-# Example:
-# ignore:
-# code-security/SNYK-CODE-1234:
-# - '*':
-# reason: "Reviewed as FP"
-# expires: 2030-01-01T00:00:00Z
-# created: 2025-09-01T00:00:00Z
+# Snyk (https://snyk.io) policy file
+version: v1.0.0
+ignore: {}
+language-settings:
+  javascript:
+    ignore-test-files: true
+  python:
+    ignore-test-files: true
+patch: {}
+

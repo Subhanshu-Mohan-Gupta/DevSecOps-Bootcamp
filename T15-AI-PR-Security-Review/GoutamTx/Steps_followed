@@ -12,6 +12,18 @@ Infrastructure as Code (IaC) (Terraform, Kubernetes, etc.)
 
 It integrates directly into your CI/CD pipelines, IDEs, and GitHub/GitLab to continuously scan and provide actionable security insights.
 
+AI Scanner Capabilities**
+
+| Feature | Description | Benefit |
+|---------|-------------|---------|
+| **Semantic Analysis** | Understands code context and intent beyond simple pattern matching | Reduces false positives by 70% |
+| **Data Flow Tracking** | Traces user input from entry points to dangerous functions | Identifies complex vulnerability chains |
+| **ML-Based Classification** | Uses trained models to distinguish real threats from benign code | Improves developer productivity |
+| **Contextual Awareness** | Considers framework-specific security patterns | Framework-optimized detection |
+
+False Positive: A security alert or vulnerability finding that incorrectly indicates the presence of a threat when no actual security risk exists,
+leading to unnecessary investigation and remediation efforts that waste developer time and resources.
+
 Steps followed :-
 
 1. Created a python project with known vulnerabilites that will be pointed by snyk.
@@ -22,7 +34,7 @@ Steps followed :-
 
 4. created the artifact and uploaded it to the repo.
 
-5. Also worte some scripts which summarizes the report and enforce severity gates.
+5. Also wrote some scripts which summarizes the report and enforce severity gates.
 
 6. Created a github action workflow to automate the whole setup
 

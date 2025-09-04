@@ -1,84 +1,98 @@
-name: T15 – AI PR Security Review
+name: AI-Powered Security Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-
-permissions:
-  contents: write
-  security-events: write
-  actions: read
-  checks: read
+    branches: [ main, master ]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
-  snyk-code-scan:
+  security-scan:
     runs-on: ubuntu-latest
-
+    name: AI Security Analysis
+    
+    permissions:
+      contents: read
+      security-events: write
+      
     steps:
-      # 1. Checkout repo
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        npm install -g snyk
+        npm install || true
+        
+    - name: Authenticate Snyk
+      run: snyk auth ${{ secrets.SNYK_TOKEN }}
+      
+    - name: Run Snyk Code Analysis
+      id: snyk-scan
+      run: |
+        echo "Starting AI-powered security scan..."
+        snyk code test \
+          --sarif-file-output=snyk-results.sarif \
+          --severity-threshold=medium \
+          --json > snyk-results.json || true
+          
+        # Extract metrics with better error handling for SARIF format
+        TOTAL_ISSUES=$(jq -r '.runs[0].results | length' snyk-results.json 2>/dev/null || echo "0")
+        HIGH_ISSUES=$(jq -r '.runs[0].results | map(select(.level == "error")) | length' snyk-results.json 2>/dev/null || echo "0") 
+        CRITICAL_ISSUES=$(jq -r '.runs[0].results | map(select(.ruleId | test("CodeInjection|CommandInjection|PT"))) | length' snyk-results.json 2>/dev/null || echo "0")
+        
+        echo "high_issues=$HIGH_ISSUES" >> $GITHUB_OUTPUT
+        echo "critical_issues=$CRITICAL_ISSUES" >> $GITHUB_OUTPUT
+        echo "total_issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+        
+        echo "Scan Results: Total=$TOTAL_ISSUES, Critical=$CRITICAL_ISSUES, High=$HIGH_ISSUES"
 
-      # 2. Setup Node.js (needed for Snyk CLI)
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
 
-      # 3. Install Snyk CLI
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      # 4. Authenticate Snyk
-      - name: Authenticate Snyk
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      # 5. Run Snyk scan (JSON + SARIF)
-      - name: Install Python dependencies
-        run: pip install -r app/requirements.txt
-      - name: Run Snyk Code scan
-        run: |
-          mkdir -p reports
-          rm -f reports/snyk-code.json reports/snyk-code.sarif
-          snyk code test --json --file=app/app.py --file=app/utils.py > reports/snyk-code.json || true
-          snyk code test --sarif --all-projects 2> /dev/null > reports/snyk-code.sarif || true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          SNYK_ORG: ${{ secrets.SNYK_ORG }}
-
-      # 6. Enforce severity gate (fail on High)
-      - name: Enforce severity gate
-        run: python scripts/enforce_severity_gate.py reports/snyk-code.json --fail-on high
-
-      # 7. Upload SARIF to GitHub for inline annotations
-      - name: Upload SARIF to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: reports/snyk-code.sarif
-
-      # 8. Summarize metrics
-      - name: Summarize metrics
-        run: python scripts/summarize_metrics.py reports/snyk-code.json reports/summary.json reports/trend.csv .snyk
-
-      # 9. Upload artifacts
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: snyk-code-reports
-          path: reports/
-
-      # 10. Optional: Handle /snyk-fp comments
-      - name: Handle "/snyk-fp" comments
-        if: contains(github.event.pull_request.body, '/snyk-fp') || contains(steps.pr-comments.outputs.COMMENTS, '/snyk-fp')
-        run: |
-          echo "Parsing /snyk-fp commands…"
-          python scripts/annotate_false_positive.py --comment "${{ github.event.pull_request.body }}"
-          git config user.email "bot@users.noreply.github.com"
-          git config user.name "automation-bot"
-          git add .snyk && git commit -m "chore(security): add temporary FP ignore via /snyk-fp" || echo "No FP changes"
-          git push || true
+        
+    - name: Upload SARIF results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: snyk-results.sarif
+        category: snyk-code
+        
+    - name: Security Gate Check
+      if: steps.snyk-scan.outputs.critical_issues > 0 || steps.snyk-scan.outputs.high_issues > 0
+      run: |
+        echo "❌ Security Gate Failed!"
+        echo "Critical Issues: ${{ steps.snyk-scan.outputs.critical_issues }}"
+        echo "High Severity Issues: ${{ steps.snyk-scan.outputs.high_issues }}"
+        echo "This pull request cannot be merged until security issues are resolved."
+        exit 1
+        
+    - name: Log Security Metrics
+      if: always()
+      run: |
+        python .github/scripts/log-metrics.py \
+          --pr-number ${{ github.event.number }} \
+          --total-issues ${{ steps.snyk-scan.outputs.total_issues }} \
+          --high-issues ${{ steps.snyk-scan.outputs.high_issues }} \
+          --critical-issues ${{ steps.snyk-scan.outputs.critical_issues }} \
+          --commit-sha ${{ github.sha }}
+          
+    - name: Upload Security Metrics
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-metrics-${{ github.event.number }}
+        path: |
+          security-metrics-*.json
+          metrics-summary.txt
+          snyk-results.json
+          snyk-results.sarif
 
