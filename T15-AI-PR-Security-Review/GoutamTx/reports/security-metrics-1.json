@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-09-04T18:31:12.755649",
+  "pr_number": "1",
+  "commit_sha": "e4f055deeb73ff58181e8cfdbea79e911c5eda92",
+  "scan_results": {
+    "total_issues": 12,
+    "high_issues": 6,
+    "critical_issues": 4,
+    "scan_engine": "snyk-code"
+  },
+  "security_gate": {
+    "passed": false,
+    "blocking_issues": 10
+  },
+  "false_positive_tracking": {
+    "enabled": true,
+    "review_pending": true
+  }
+}
