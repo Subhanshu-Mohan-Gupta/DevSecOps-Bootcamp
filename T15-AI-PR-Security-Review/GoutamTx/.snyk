@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file
+version: v1.0.0
+ignore: {}
+language-settings:
+  javascript:
+    ignore-test-files: true
+  python:
+    ignore-test-files: true
+patch: {}
+
