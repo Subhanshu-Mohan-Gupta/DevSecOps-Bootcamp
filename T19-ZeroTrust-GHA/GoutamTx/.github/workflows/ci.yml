@@ -1,0 +1,57 @@
+# .github/workflows/ci.yml
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # These permissions are required for the OIDC token exchange
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: ✅ Checkout code
+        uses: actions/checkout@v4
+        env:
+          # Add this line for the test
+          AWS_ACCESS_KEY_ID: "THIS_IS_A_FAKE_KEY"
+
+      - name: 🛡️ Scan for static AWS secrets
+        run: |
+          # This step fails the build if AWS keys are found in the workflow files
+          if grep -r "AWS_ACCESS_KEY""_ID" .github/workflows/ || grep -r "AWS_SECRET_ACCESS""_KEY" .github/workflows/; then
+            echo "Error: Static AWS credentials found in workflow. Please use OIDC roles."
+            exit 1
+          fi
+          echo "No static secrets found."
+
+      - name: ⚙️ Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Replace YOUR_AWS_ACCOUNT_ID with your actual account ID
+          role-to-assume: arn:aws:iam::577467805138:role/github-actions-deploy-role
+          aws-region: us-east-1
+
+      - name: 📦 Zip Lambda function
+        run: zip -j deploy.zip ./src/index.js
+
+      - name: 🚀 Deploy Lambda to AWS
+        run: |
+          # This command tries to create the function; if it already exists, it updates the code.
+          aws lambda create-function \
+            --function-name my-oidc-lambda \
+            --runtime nodejs18.x \
+            --handler index.handler \
+            --zip-file fileb://deploy.zip \
+            --role arn:aws:iam::577467805138:role/sample-lambda-execution-role || \
+          aws lambda update-function-code \
+            --function-name my-oidc-lambda \
+            --zip-file fileb://deploy.zip
