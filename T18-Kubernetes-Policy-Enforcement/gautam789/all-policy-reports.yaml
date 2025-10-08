@@ -1,0 +1,1402 @@
+apiVersion: v1
+items:
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:42:13Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 6347d86e-1e21-4288-b7d8-fb5c0e57b846
+    namespace: default
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: good-pod
+      uid: 6347d86e-1e21-4288-b7d8-fb5c0e57b846
+    resourceVersion: "6434"
+    uid: a2e7ad00-22c0-4faa-85d3-6b4d769fd43f
+  results:
+  - message: validation rule 'validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569343
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569343
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: good-pod
+    namespace: default
+    uid: 6347d86e-1e21-4288-b7d8-fb5c0e57b846
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 03464ade-dcbf-4398-a5ca-832da2aaacd4
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kube-proxy-67kv2
+      uid: 03464ade-dcbf-4398-a5ca-832da2aaacd4
+    resourceVersion: "5730"
+    uid: 7c09a252-9d92-47b4-a3f3-a2943ef38e89
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule validate-readonly-rootfs failed at path /spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kube-proxy-67kv2
+    namespace: kube-system
+    uid: 03464ade-dcbf-4398-a5ca-832da2aaacd4
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 0d378a3e-49c9-4250-8167-489c853f028a
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: DaemonSet
+      name: kube-proxy
+      uid: 0d378a3e-49c9-4250-8167-489c853f028a
+    resourceVersion: "5702"
+    uid: a4576dd6-1937-40e2-94c6-41fd02f8b96f
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule autogen-validate-readonly-rootfs failed at path /spec/template/spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: DaemonSet
+    name: kube-proxy
+    namespace: kube-system
+    uid: 0d378a3e-49c9-4250-8167-489c853f028a
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 1d5dbbec-54e6-4eba-a70f-8feb37a0125d
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: coredns-6799d65cb-88lxk
+      uid: 1d5dbbec-54e6-4eba-a70f-8feb37a0125d
+    resourceVersion: "5725"
+    uid: 0677c7c4-6e28-4cbc-ac8e-65316b22e0dc
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: coredns-6799d65cb-88lxk
+    namespace: kube-system
+    uid: 1d5dbbec-54e6-4eba-a70f-8feb37a0125d
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 3ec052be-9ce9-461e-82f7-3e659456884f
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: DaemonSet
+      name: aws-node
+      uid: 3ec052be-9ce9-461e-82f7-3e659456884f
+    resourceVersion: "5703"
+    uid: 4723363b-b5b6-4e1b-ba78-6c6ca5d31ed7
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule autogen-validate-readonly-rootfs failed at path /spec/template/spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: DaemonSet
+    name: aws-node
+    namespace: kube-system
+    uid: 3ec052be-9ce9-461e-82f7-3e659456884f
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 402a6b66-1cae-4707-8e43-f1ed476d6b08
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: metrics-server-5775b55498-l5kmx
+      uid: 402a6b66-1cae-4707-8e43-f1ed476d6b08
+    resourceVersion: "5735"
+    uid: 22130df5-31d2-4c31-afad-5ef0bf79d3e0
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-server-5775b55498-l5kmx
+    namespace: kube-system
+    uid: 402a6b66-1cae-4707-8e43-f1ed476d6b08
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 63c6270d-cd56-4644-ae49-54af79046804
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: coredns-6799d65cb
+      uid: 63c6270d-cd56-4644-ae49-54af79046804
+    resourceVersion: "5747"
+    uid: 3408b4e5-238d-4f02-9e1f-eeed8fb97da4
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: coredns-6799d65cb
+    namespace: kube-system
+    uid: 63c6270d-cd56-4644-ae49-54af79046804
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 65811d44-3399-429b-b1cd-56d89d930995
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: metrics-server-5775b55498-66rlh
+      uid: 65811d44-3399-429b-b1cd-56d89d930995
+    resourceVersion: "5734"
+    uid: 486629a6-3105-4a8a-9692-cebe7c87be51
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-server-5775b55498-66rlh
+    namespace: kube-system
+    uid: 65811d44-3399-429b-b1cd-56d89d930995
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 931b285d-e369-4682-82c6-ac8c48f113ad
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: metrics-server-5775b55498
+      uid: 931b285d-e369-4682-82c6-ac8c48f113ad
+    resourceVersion: "5746"
+    uid: a03950a5-bf83-40be-85fe-5eed84e8cd46
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: metrics-server-5775b55498
+    namespace: kube-system
+    uid: 931b285d-e369-4682-82c6-ac8c48f113ad
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: a5d7f13f-c7cf-4cce-a93b-ae39070733a7
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: aws-node-5fq8f
+      uid: a5d7f13f-c7cf-4cce-a93b-ae39070733a7
+    resourceVersion: "5721"
+    uid: 1e553c68-b597-4711-b0fa-4b46464f0cea
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule validate-readonly-rootfs failed at path /spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: aws-node-5fq8f
+    namespace: kube-system
+    uid: a5d7f13f-c7cf-4cce-a93b-ae39070733a7
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: ab6784cf-26b3-4830-bd63-171281f47b93
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: coredns
+      uid: ab6784cf-26b3-4830-bd63-171281f47b93
+    resourceVersion: "5707"
+    uid: e1089559-a03f-42af-97fc-2a652da383df
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coredns
+    namespace: kube-system
+    uid: ab6784cf-26b3-4830-bd63-171281f47b93
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: b7eec5df-0880-49d5-9bb4-00e215071bff
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: aws-node-gc249
+      uid: b7eec5df-0880-49d5-9bb4-00e215071bff
+    resourceVersion: "5722"
+    uid: bc835aaf-a572-4352-af24-a3b37e3e0945
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule validate-readonly-rootfs failed at path /spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: aws-node-gc249
+    namespace: kube-system
+    uid: b7eec5df-0880-49d5-9bb4-00e215071bff
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: c105dcc5-e532-4044-a47d-f5d635c7914d
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: metrics-server
+      uid: c105dcc5-e532-4044-a47d-f5d635c7914d
+    resourceVersion: "5708"
+    uid: c7fa5a6c-cb7e-4cd4-8265-73e65de6312c
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule autogen-validate-privileged
+      failed at path /spec/template/spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: metrics-server
+    namespace: kube-system
+    uid: c105dcc5-e532-4044-a47d-f5d635c7914d
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: c3fe5b28-0cfe-44d7-92ee-d1d692a62b83
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: coredns-6799d65cb-jdmfx
+      uid: c3fe5b28-0cfe-44d7-92ee-d1d692a62b83
+    resourceVersion: "5726"
+    uid: d92d142b-d76a-4b02-850c-972b4534b5b7
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: coredns-6799d65cb-jdmfx
+    namespace: kube-system
+    uid: c3fe5b28-0cfe-44d7-92ee-d1d692a62b83
+  summary:
+    error: 0
+    fail: 1
+    pass: 1
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: ecfd5dc2-fb70-4de9-ad81-ef2d35df3a80
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kube-proxy-kqb92
+      uid: ecfd5dc2-fb70-4de9-ad81-ef2d35df3a80
+    resourceVersion: "5731"
+    uid: f54fec2d-64ea-4e96-8fc2-3dfa61d4ca8b
+  results:
+  - message: 'validation error: Privileged containers are not allowed. rule validate-privileged
+      failed at path /spec/containers/0/securityContext/privileged/'
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: 'validation error: Containers must run with readOnlyRootFilesystem enabled.
+      rule validate-readonly-rootfs failed at path /spec/containers/0/securityContext/readOnlyRootFilesystem/'
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: fail
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kube-proxy-kqb92
+    namespace: kube-system
+    uid: ecfd5dc2-fb70-4de9-ad81-ef2d35df3a80
+  summary:
+    error: 0
+    fail: 2
+    pass: 0
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 07538859-7cba-40a2-ad60-f1a4c2fc047b
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-cleanup-controller
+      uid: 07538859-7cba-40a2-ad60-f1a4c2fc047b
+    resourceVersion: "5716"
+    uid: 8b0286af-18ff-4c18-9cba-25dea7103123
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kyverno-cleanup-controller
+    namespace: kyverno
+    uid: 07538859-7cba-40a2-ad60-f1a4c2fc047b
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 252f5591-a503-4055-8282-0f52bee4510e
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-admission-controller
+      uid: 252f5591-a503-4055-8282-0f52bee4510e
+    resourceVersion: "5713"
+    uid: 50d8ebb0-1166-4831-b4f0-3524da483697
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kyverno-admission-controller
+    namespace: kyverno
+    uid: 252f5591-a503-4055-8282-0f52bee4510e
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 33cb4380-ae6c-4137-9a54-81f0b0ce100e
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-reports-controller
+      uid: 33cb4380-ae6c-4137-9a54-81f0b0ce100e
+    resourceVersion: "5718"
+    uid: 871f31f0-f172-404a-b21a-8babc1494863
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kyverno-reports-controller
+    namespace: kyverno
+    uid: 33cb4380-ae6c-4137-9a54-81f0b0ce100e
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 3ff2e44f-2efe-43c7-a986-28073525d4d3
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kyverno-cleanup-controller-745cbc6f8d-wwwwx
+      uid: 3ff2e44f-2efe-43c7-a986-28073525d4d3
+    resourceVersion: "5743"
+    uid: e6971eb9-94e0-4029-8f20-9d70b2c6b288
+  results:
+  - message: validation rule 'validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kyverno-cleanup-controller-745cbc6f8d-wwwwx
+    namespace: kyverno
+    uid: 3ff2e44f-2efe-43c7-a986-28073525d4d3
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 57ceba9b-8995-461d-9086-a1cda9188c89
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kyverno-reports-controller-7867ffd654-667xd
+      uid: 57ceba9b-8995-461d-9086-a1cda9188c89
+    resourceVersion: "5742"
+    uid: 71c51d06-d8d0-4d2c-91db-860081329928
+  results:
+  - message: validation rule 'validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kyverno-reports-controller-7867ffd654-667xd
+    namespace: kyverno
+    uid: 57ceba9b-8995-461d-9086-a1cda9188c89
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 5de56d27-076d-4266-8700-9dae003f5d11
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: kyverno-background-controller
+      uid: 5de56d27-076d-4266-8700-9dae003f5d11
+    resourceVersion: "5712"
+    uid: 7ce4e31f-7020-48af-a1a0-4fe37597f130
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kyverno-background-controller
+    namespace: kyverno
+    uid: 5de56d27-076d-4266-8700-9dae003f5d11
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: 92137dae-93c8-4fbd-a567-e401d3cada49
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kyverno-background-controller-7c7d4dbbc9-fz28k
+      uid: 92137dae-93c8-4fbd-a567-e401d3cada49
+    resourceVersion: "5738"
+    uid: 24e7acb5-3cfc-41a5-b9f8-afc29224ee98
+  results:
+  - message: validation rule 'validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kyverno-background-controller-7c7d4dbbc9-fz28k
+    namespace: kyverno
+    uid: 92137dae-93c8-4fbd-a567-e401d3cada49
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: a3c6ddee-34bf-4cae-a830-1bd86c6bd378
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: v1
+      kind: Pod
+      name: kyverno-admission-controller-5bcbdff469-5hvwr
+      uid: a3c6ddee-34bf-4cae-a830-1bd86c6bd378
+    resourceVersion: "5739"
+    uid: 08d7e561-8c43-4924-98b5-dc2b4d585d3c
+  results:
+  - message: validation rule 'validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: v1
+    kind: Pod
+    name: kyverno-admission-controller-5bcbdff469-5hvwr
+    namespace: kyverno
+    uid: a3c6ddee-34bf-4cae-a830-1bd86c6bd378
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: a4123e86-00a9-420c-9d23-5395ca07756d
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: kyverno-cleanup-controller-745cbc6f8d
+      uid: a4123e86-00a9-420c-9d23-5395ca07756d
+    resourceVersion: "5754"
+    uid: df18364c-77fd-4183-be0e-e926be76d27b
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: kyverno-cleanup-controller-745cbc6f8d
+    namespace: kyverno
+    uid: a4123e86-00a9-420c-9d23-5395ca07756d
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: e0099f22-5a04-4c97-930b-415523427f10
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: kyverno-reports-controller-7867ffd654
+      uid: e0099f22-5a04-4c97-930b-415523427f10
+    resourceVersion: "5755"
+    uid: f863f03c-3fcb-4c2e-928a-47b70dabf348
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: kyverno-reports-controller-7867ffd654
+    namespace: kyverno
+    uid: e0099f22-5a04-4c97-930b-415523427f10
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: eeca307c-7c75-49e7-9ea6-45d83637c48d
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: kyverno-admission-controller-5bcbdff469
+      uid: eeca307c-7c75-49e7-9ea6-45d83637c48d
+    resourceVersion: "5750"
+    uid: d41ba4b1-93a4-41c1-9761-48658b97f26c
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: kyverno-admission-controller-5bcbdff469
+    namespace: kyverno
+    uid: eeca307c-7c75-49e7-9ea6-45d83637c48d
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+- apiVersion: wgpolicyk8s.io/v1alpha2
+  kind: PolicyReport
+  metadata:
+    creationTimestamp: "2025-09-11T05:39:49Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/managed-by: kyverno
+    name: fc0d6088-cc37-436d-a3cb-969414bda1f2
+    namespace: kyverno
+    ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: kyverno-background-controller-7c7d4dbbc9
+      uid: fc0d6088-cc37-436d-a3cb-969414bda1f2
+    resourceVersion: "5751"
+    uid: 0c290b52-23a5-4832-928d-a35717093a02
+  results:
+  - message: validation rule 'autogen-validate-privileged' passed.
+    policy: disallow-privileged
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-privileged
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  - message: validation rule 'autogen-validate-readonly-rootfs' passed.
+    policy: require-readonly-rootfs
+    properties:
+      process: background scan
+    result: pass
+    rule: autogen-validate-readonly-rootfs
+    scored: true
+    source: kyverno
+    timestamp:
+      nanos: 0
+      seconds: 1757569209
+  scope:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: kyverno-background-controller-7c7d4dbbc9
+    namespace: kyverno
+    uid: fc0d6088-cc37-436d-a3cb-969414bda1f2
+  summary:
+    error: 0
+    fail: 0
+    pass: 2
+    skip: 0
+    warn: 0
+kind: List
+metadata:
+  resourceVersion: ""

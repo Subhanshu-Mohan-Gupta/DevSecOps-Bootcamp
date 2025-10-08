@@ -1,0 +1,112 @@
+
+name: Kyverno Policy-as-Code on EKS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  kyverno-pac:
+    name: Deploy and Test Kyverno Policies
+    runs-on: ubuntu-latest
+
+    steps:
+    # ----------------------
+    # 1. Checkout Code
+    # ----------------------
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # ----------------------
+    # 2. Configure AWS Credentials
+    # ----------------------
+    - name: Configure AWS CLI
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # ----------------------
+    # 3. Install Tools (kubectl, eksctl, helm)
+    # ----------------------
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+
+    - name: Install eksctl
+      run: |
+        curl --silent --location "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+    # ----------------------
+    # 4. Connect to EKS Cluster
+    # ----------------------
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name kyverno-eks
+        kubectl get nodes
+
+    # ----------------------
+    # 5. Install Kyverno
+    # ----------------------
+    - name: Install Kyverno
+      run: |
+        helm repo add kyverno https://kyverno.github.io/kyverno/
+        helm repo update
+        helm upgrade --install kyverno kyverno/kyverno -n kyverno --create-namespace
+        kubectl rollout status deployment/kyverno-admission-controller -n kyverno
+
+    # ----------------------
+    # 6. Apply Security Policies
+    # ----------------------
+    - name: Apply Kyverno Policies
+      run: |
+        kubectl apply -f policies/
+        kubectl get clusterpolicies
+
+    # ----------------------
+    # 7. Deploy Test Pods
+    # ----------------------
+    - name: Deploy Good Pod
+      run: |
+        kubectl apply -f good-pod.yaml
+
+    - name: Deploy Bad Pod
+      run: |
+        set +e
+        kubectl apply -f bad-pod.yaml || echo "Bad pod blocked by Kyverno as expected"
+        set -e
+
+    # ----------------------
+    # 8. Verify Policy Reports
+    # ----------------------
+    - name: Fetch Policy Reports
+      run: |
+        mkdir reports
+        kubectl get policyreports -A -o yaml > reports/policy-reports.yaml
+        kubectl get events -A -o yaml > reports/cluster-events.yaml
+
+    - name: Upload Reports as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: kyverno-policy-reports
+        path: reports/
+
+    # ----------------------
+    # 9. Cleanup Bad Pod
+    # ----------------------
+    - name: Cleanup
+      if: always()
+      run: |
+        kubectl delete pod good-pod --ignore-not-found
+        kubectl delete pod bad-pod --ignore-not-found
+
