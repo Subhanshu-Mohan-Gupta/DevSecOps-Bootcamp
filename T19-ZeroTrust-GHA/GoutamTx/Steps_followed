@@ -1,0 +1,25 @@
+Zero-Trust GitHub Actions to AWS Lambda Deployment
+This project demonstrates how to create a secure, zero-trust CI/CD pipeline. It deploys a serverless AWS Lambda function using GitHub Actions without any long-lived static secrets like AWS_ACCESS_KEY_ID.
+
+The pipeline achieves this by configuring a trust relationship between GitHub and AWS using OpenID Connect (OIDC).
+
+.
+├── .github/
+│   └── workflows/
+│       └── ci.yml        
+├── infra/
+│   └── main.tf           
+├── src/
+│   └── index.js          
+├── .gitignore             
+└── Steps_followed    
+
+Step 1:Gather your AWS/GitHub accounts and install the necessary command-line tools.
+
+Step 2:Define the required AWS OIDC and IAM role infrastructure using Terraform code.
+
+Step 3:Write the simple "Hello World" code for the AWS Lambda function.
+
+Step 4:Create the GitHub Actions workflow YAML file to define the CI/CD pipeline.
+
+Step 5:Push the code to your GitHub repository to automatically trigger the deployment process.
